@@ -55,3 +55,13 @@ Open http://localhost:3000/setup to create the DM account.
 - Login attempts are throttled in memory, which resets when the server restarts. This is fine for a private table, but it is not a hardened login system.
 - Passwords are stored as bcrypt hashes. Sessions are signed cookies that last 14 days.
 - Rules text lives in the campaign docs, not in this app. The app only tracks state.
+
+## Rules book and deck
+
+The Rules book (`/rules`) and the Deck (`/deck`) are generated from the markdown in `content/`:
+
+- `content/rules.md` is the rules doc. Each `## N. Title` section becomes a chapter. A section called "Still open" is left out.
+- `content/setting-and-decks.md` holds the desire, relationship and connection cards and the Houses.
+
+After editing either file, run `npm run content` to rebuild `lib/rules-data.js` and `lib/deck-data.js`, then commit. Adventure **Hook** lines on desire cards are only sent to the DM.
+The world map goes in `public/world-map.jpg` (see `lib/world.js`).

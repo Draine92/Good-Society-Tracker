@@ -5,6 +5,8 @@ import Flash from '@/components/Flash';
 import Pips from '@/components/Pips';
 import { MapThumb } from '@/components/MapViewer';
 import { WORLD_NAME } from '@/lib/world';
+import { CHAPTERS } from '@/lib/rules-data';
+import { DESIRES, RELATIONSHIPS, CONNECTIONS } from '@/lib/deck-data';
 
 const clip = (s, n = 90) => (s && s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s || '');
 
@@ -39,6 +41,16 @@ export default async function NoticeBoard({ searchParams }) {
           <h1>Notice Board of {WORLD_NAME}</h1>
           <span>Session {session}</span>
         </div>
+
+        <div className="board-layout">
+        <Link href="/rules" className="book-obj" aria-label="Open the rules book">
+          <span className="book-cover">
+            <span className="book-orn">❦</span>
+            <span className="book-title">Rules of the Concord</span>
+            <span className="book-orn small">· · ·</span>
+          </span>
+          <span className="obj-label">{CHAPTERS.length} chapters</span>
+        </Link>
 
         <div className="board-grid">
           <Link href="/map" className="note map-note" aria-label="Open the world map">
@@ -112,7 +124,7 @@ export default async function NoticeBoard({ searchParams }) {
             <span className="more">See everyone →</span>
           </Link>
 
-          <Link href="/court#story" className="note story-note" aria-label="Open the story so far">
+          <Link href="/court#story" className="note tilt-r2" aria-label="Open the story so far">
             <span className="pin" />
             <h3>Story So Far</h3>
             {log.length === 0 && <p className="muted">The tale has yet to begin.</p>}
@@ -125,6 +137,15 @@ export default async function NoticeBoard({ searchParams }) {
             </ul>
             <span className="more">Read on →</span>
           </Link>
+        </div>
+
+        <Link href="/deck" className="deck-obj" aria-label="Open the deck of cards">
+          <span className="deck-stack">
+            <span className="dcard c1" /><span className="dcard c2" /><span className="dcard c3" />
+            <span className="dcard c4"><span className="deck-orn">⚜</span></span>
+          </span>
+          <span className="obj-label">{DESIRES.length + RELATIONSHIPS.length + CONNECTIONS.length} cards</span>
+        </Link>
         </div>
       </div>
     </>
