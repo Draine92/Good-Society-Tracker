@@ -40,7 +40,9 @@ export default async function RootLayout({ children }) {
           </div>
           {user && (
             <nav>
-              <Link href="/">Public sheet</Link>
+              <Link href="/">Notice board</Link>
+              <Link href="/court">The Court</Link>
+              <Link href="/map">Map</Link>
               <Link href="/rumours">Rumours</Link>
               <Link href="/npcs">NPCs</Link>
               {user.role === 'player' && <Link href="/me">My character</Link>}

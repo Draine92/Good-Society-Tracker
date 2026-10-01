@@ -16,7 +16,7 @@ export default function CharacterCard({ c, tags, canEdit }) {
   const pos = tags.filter((t) => t.kind === 'positive');
   const neg = tags.filter((t) => t.kind === 'negative');
   return (
-    <article className="card">
+    <article className="card" id={`c${c.id}`}>
       <h3>{c.name || c.display_name}</h3>
       <div className="meta">Played by {c.display_name}</div>
       {c.concept && <p>{c.concept}</p>}

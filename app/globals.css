@@ -121,3 +121,75 @@ summary { cursor: pointer; font-weight: 600; color: var(--wine); }
 .login { max-width: 380px; margin: 3rem auto; }
 .muted { color: var(--ink-soft); }
 .log li { margin-bottom: 8px; }
+
+/* ---------- Notice board ---------- */
+:root {
+  --cork: #b98d5a; --cork-2: #a67c4a; --wood: #5a3a22; --wood-2: #3e2815;
+  --note: #fbf4e0; --note-ink: #2b2117; --note-soft: #6a5a48; --note-line: #e2d3b3;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --cork: #6d5236; --cork-2: #5e462c; --wood: #2d1d10; --wood-2: #1c1209;
+    --note: #2b241b; --note-ink: #efe6d3; --note-soft: #b3a48c; --note-line: #43382a; }
+}
+.board {
+  background-color: var(--cork);
+  background-image: radial-gradient(var(--cork-2) 1.2px, transparent 1.4px), radial-gradient(var(--cork-2) 1px, transparent 1.2px);
+  background-size: 14px 14px, 23px 23px; background-position: 0 0, 7px 9px;
+  border: 14px solid var(--wood); border-radius: 12px;
+  box-shadow: inset 0 0 30px rgba(0,0,0,.35), 0 6px 18px rgba(0,0,0,.25);
+  padding: 18px 18px 26px; margin-top: 6px;
+}
+.plank {
+  background: linear-gradient(var(--wood), var(--wood-2)); color: #f3e4c3;
+  border-radius: 6px; padding: 8px 18px; margin: -4px auto 20px; max-width: 640px; text-align: center;
+  box-shadow: 0 3px 8px rgba(0,0,0,.4);
+}
+.plank h1 { color: #f3e4c3; font-size: 1.9rem; margin: 0; }
+.plank span { font-size: .9rem; opacity: .85; }
+.board-grid { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); align-items: start; }
+.note {
+  position: relative; display: block; text-decoration: none; color: var(--note-ink);
+  background: var(--note); border: 1px solid var(--note-line); border-radius: 3px;
+  padding: 22px 16px 14px; box-shadow: 0 4px 10px rgba(0,0,0,.35);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.note:hover, .note:focus-visible { transform: translateY(-3px) rotate(0deg) !important; box-shadow: 0 9px 18px rgba(0,0,0,.4); }
+.note h3 { color: var(--wine); margin: 0 0 6px; font-size: 1.35rem; }
+.note .muted { color: var(--note-soft); }
+.note .pin {
+  position: absolute; top: 6px; left: 50%; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #e8707f, #8f2433 70%); box-shadow: 0 2px 3px rgba(0,0,0,.5);
+}
+.note .tally { margin: 0 0 6px; color: var(--note-soft); }
+.note .tally b { color: var(--ink); font-size: 1.15rem; }
+.note .more { display: block; margin-top: 10px; font-weight: 600; color: var(--wine); font-size: .92rem; }
+ul.mini { list-style: none; margin: 0; padding: 0; }
+ul.mini li { padding: 6px 0; border-bottom: 1px dashed var(--note-line); font-size: .95rem; }
+ul.mini li:last-child { border-bottom: 0; }
+.tilt-l { transform: rotate(-1.2deg); } .tilt-r { transform: rotate(1deg); }
+.tilt-l2 { transform: rotate(.8deg); } .tilt-r2 { transform: rotate(-.9deg); }
+.map-note { grid-column: 1 / -1; transform: rotate(-.4deg); }
+.story-note { grid-column: 1 / -1; }
+.map-thumb { display: block; width: 100%; max-height: 420px; object-fit: cover; border: 1px solid var(--note-line); border-radius: 2px; }
+.map-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center;
+  min-height: 190px; border: 2px dashed var(--note-line); border-radius: 4px; color: var(--note-soft); padding: 16px;
+}
+.map-empty.big { min-height: 320px; background: var(--paper-2); }
+.map-empty .compass { font-size: 2.2rem; color: var(--gold); }
+.map-viewer { position: relative; }
+.map-stage {
+  overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-2);
+  touch-action: none; cursor: grab; height: min(78vh, 760px);
+  display: flex; align-items: center; justify-content: center;
+}
+.map-stage:active { cursor: grabbing; }
+.map-stage img { max-width: 100%; max-height: 100%; user-select: none; transform-origin: center; }
+.map-tools { position: absolute; z-index: 2; top: 10px; right: 10px; display: flex; gap: 6px; background: var(--paper-2); padding: 4px; border-radius: 8px; border: 1px solid var(--line); }
+.small-note { font-size: .85rem; margin: 6px 0 0; }
+@media (max-width: 560px) {
+  .board { border-width: 8px; padding: 12px 10px 20px; }
+  .note { transform: none !important; }
+  .plank h1 { font-size: 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) { .note { transition: none; } }
