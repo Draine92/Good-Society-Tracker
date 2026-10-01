@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getUser, userCount } from '@/lib/auth';
 import { logout } from './actions';
 import AutoRefresh from '@/components/AutoRefresh';
+import ThemeToggle from '@/components/ThemeToggle';
 import { currentSession } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -24,8 +25,14 @@ export default async function RootLayout({ children }) {
   }
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{var t=localStorage.getItem('gs_theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}",
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
@@ -38,6 +45,7 @@ export default async function RootLayout({ children }) {
           <div className="brand">
             <span className="crest">❦</span> Good Society Tracker
           </div>
+          <div className="top-right">
           {user && (
             <nav>
               <Link href="/">Notice board</Link>
@@ -58,6 +66,8 @@ export default async function RootLayout({ children }) {
               </form>
             </nav>
           )}
+          <ThemeToggle />
+          </div>
         </header>
         <main>
           {error ? (
