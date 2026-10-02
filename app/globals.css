@@ -150,13 +150,26 @@ summary { cursor: pointer; font-weight: 600; color: var(--wine); }
     --note: #2a1c1c; --note-ink: #f3e6d3; --note-soft: #c2a98f; --note-line: #4a3326; }
 }
 .board {
+  --k: .72; /* scale of the ornate frame */
+  position: relative;
   background-color: var(--velvet);
   background-image:
     repeating-linear-gradient(45deg, rgba(255,200,90,.16) 0 1px, transparent 1px 30px),
     repeating-linear-gradient(-45deg, rgba(255,200,90,.16) 0 1px, transparent 1px 30px);
-  border: 14px solid var(--frame); border-radius: 12px;
-  box-shadow: inset 0 0 50px rgba(0,0,0,.55), 0 8px 22px rgba(0,0,0,.35), 0 0 0 3px var(--frame-2);
-  padding: 18px 18px 26px; margin-top: 6px;
+  border: calc(20px * var(--k)) solid var(--frame);
+  border-image: url('/frame-edge.png') 20 / calc(20px * var(--k)) round;
+  box-shadow: inset 0 0 50px rgba(0,0,0,.55), 0 8px 22px rgba(0,0,0,.35);
+  padding: 34px 34px 40px; margin-top: 6px;
+}
+/* ornate corners cut from the plate, laid over the four corners */
+.board::before {
+  content: ''; position: absolute; z-index: 3; pointer-events: none;
+  inset: calc(-12px * var(--k) - 20px * var(--k));
+  --cs: calc(124px * var(--k));
+  background-repeat: no-repeat; background-size: var(--cs) var(--cs);
+  background-image: url('/frame-tl.webp'), url('/frame-tr.webp'), url('/frame-bl.webp'), url('/frame-br.webp');
+  background-position: left top, right top, left bottom, right bottom;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,.45));
 }
 .plank {
   background: linear-gradient(var(--gilt), var(--frame)); color: var(--gilt-ink); border: 2px solid #fff3c0;
@@ -206,7 +219,7 @@ ul.mini li:last-child { border-bottom: 0; }
 .map-tools { position: absolute; z-index: 2; top: 10px; right: 10px; display: flex; gap: 6px; background: var(--paper-2); padding: 4px; border-radius: 8px; border: 1px solid var(--line); }
 .small-note { font-size: .85rem; margin: 6px 0 0; }
 @media (max-width: 560px) {
-  .board { border-width: 8px; padding: 12px 10px 20px; }
+  .board { --k: .42; padding: 18px 10px 24px; }
   .note { transform: none !important; }
   .plank h1 { font-size: 1.2rem; }
 }
