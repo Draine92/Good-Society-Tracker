@@ -16,17 +16,17 @@ Card numbers (#1-66) match the base Good Society deck, so the playsets and the r
 - **Magic as etiquette:** duels, charms and scrying on a guest are all serious breaches of manners, though some people do them anyway.
 - **Old wealth vs. new wealth:** the Counting-Houses are buying their way into rooms that were closed to them.
 
-**Family backgrounds, reskinned** (choose one as a starting package: two starting reputation tags and a social standing)
-| Base | Fantasy equivalent | Flavour |
-|---|---|---|
-| Old Money | **Ancient House** | Centuries of land and tradition |
-| Peerage | **High House** | Holds a seat and a title among the great Houses |
-| New Money | **Counting-House** | Trade and industry, rich but not welcome |
-| Humble Origins | **Lesser Line** | Poor branch of a good name |
-| Clergy | **Temple House** | Moral weight, modest purse |
-| Military | **Banner House** | Sworn swords, honour and discipline |
-| Ill-Reputed | **Shadowed House** | A scandal sits over every dinner |
-| Foreign | **Far-Court** | From another realm, culture or plane |
+**Family backgrounds, reskinned** (choose one as a starting package: pick one positive and one negative reputation tag from its list, plus a social standing)
+| Base | Fantasy equivalent | Flavour | Positive tags | Negative tags | Title |
+|---|---|---|---|---|---|
+| Old Money | **Ancient House** | Centuries of land and tradition | Sensible, well-connected, dependable, generous, caring | Old-fashioned, miserly, overbearing, self-obsessed, tasteless | - |
+| Peerage | **High House** | Holds a seat and a title among the great Houses | Influential, austere, wise, famous, giving | Vain, proud, vengeful, incompetent, mean-spirited | Title holders: Earl/Countess, Viscount/Viscountess, Baron/Baroness, Sir. Spouses or children: Lord, Lady, the Honourable. |
+| New Money | **Counting-House** | Trade and industry, rich but not welcome | Rich, ambitious, clever, industrious, novel | Vulgar, outsider, uneducated, unfortunate connections, common | - |
+| Humble Origins | **Lesser Line** | Poor branch of a good name | Sweet, obedient, tough, innocent, open | Dirty, ignorant, poor, dangerous, stupid | - |
+| Clergy | **Temple House** | Moral weight, modest purse | Kind, knowledgeable, moral, charismatic, devoted | Dull, hypocritical, greedy, out-of-touch, useless | - |
+| Military | **Banner House** | Sworn swords, honour and discipline | Brave, steadfast, honourable, capable, forthright | Blunt, cold, reckless, aloof, angry | - |
+| Ill-Reputed | **Shadowed House** | A scandal sits over every dinner | Reformed, experienced, repentant, unique, widespread | Immoral, irresponsible, ruined, indebted, unpredictable | - |
+| Foreign | **Far-Court** | From another realm, culture or plane | Charming, fascinating, cultured, worldly, refreshing | Uncouth, strange, prejudiced, misinformed, hostile | - |
 
 Any species can appear in Corvane, and the Concord does not treat species as a barrier to rank. It does treat origin as one.
 

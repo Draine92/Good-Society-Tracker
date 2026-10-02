@@ -105,7 +105,7 @@ export default function DeckBrowser({ desires, relationships, connections, famil
       <FlipCard
         key={item.name} big={big} label={`${item.name}, House`}
         front={<HouseFront i={i} name={item.name} base={item.base} />}
-        back={<HouseBack i={i} name={item.name} base={item.base} flavour={item.flavour} />}
+        back={<HouseBack i={i} name={item.name} base={item.base} flavour={item.flavour} positive={item.positive} negative={item.negative} title={item.title} />}
       />
     );
   };

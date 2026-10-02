@@ -51,14 +51,18 @@ export function HouseFront({ i, name, base }) {
     </Frame>
   );
 }
-export function HouseBack({ i, name, base, flavour }) {
+export function HouseBack({ i, name, base, flavour, positive = [], negative = [], title }) {
   return (
     <Frame tone="lilac" num={ROMAN[i]} kind="House" sub={base}>
-      <div className="rc-text">
+      <div className="rc-text rc-house">
         <h4>{name}</h4>
         <p><em>{flavour}</em></p>
         <hr />
-        <p>Choose a House as your starting package: two starting reputation tags and a social standing.</p>
+        <h4>Starting reputation</h4>
+        <p className="rc-small">Pick one of each and write them on the public sheet.</p>
+        <p className="rc-tags"><b>▲ Positive</b> {positive.join(', ')}</p>
+        <p className="rc-tags"><b>▽ Negative</b> {negative.join(', ')}</p>
+        {title && <p className="rc-small rc-title">{title}</p>}
       </div>
     </Frame>
   );

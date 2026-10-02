@@ -409,3 +409,10 @@ button.danger { background: #8a1c1c; color: #fff; }
 .rc-sigil { left: 22cqw; right: 22cqw; bottom: 14cqw; width: 56cqw; aspect-ratio: 1; background: url('/connection-sigil.png') no-repeat center / contain; }
 
 .rc-medal { left: 17cqw; right: 17cqw; bottom: 11cqw; width: 66cqw; aspect-ratio: 1; background: url('/house-medallion.png') no-repeat center / contain; }
+
+.rc-house p { margin-bottom: 2.4cqw; }
+.rc-house hr { margin: 3cqw auto; }
+.rc-house .rc-small { font-size: 3.5cqw; font-style: italic; opacity: .78; }
+.rc-house .rc-tags { font-size: 4.3cqw; line-height: 1.38; }
+.rc-house .rc-tags b { display: block; font-family: var(--font-head); font-size: 3.4cqw; letter-spacing: .14em; text-transform: uppercase; margin-bottom: .4cqw; }
+.rc-house .rc-title { margin-top: 3cqw; }
