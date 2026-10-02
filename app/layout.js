@@ -45,7 +45,7 @@ export default async function RootLayout({ children }) {
       <body>
         <header className="top">
           <div className="brand">
-            <span className="crest"><CelticKnot size={28} gap="var(--paper-2)" /></span> {SITE_NAME}
+            <span className="crest"><CelticKnot size={28} gap="var(--top-gap)" /></span> {SITE_NAME}
           </div>
           <div className="top-right">
           {user && (
