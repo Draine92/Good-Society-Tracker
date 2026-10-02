@@ -4,13 +4,14 @@ import { getUser, userCount } from '@/lib/auth';
 import { logout } from './actions';
 import AutoRefresh from '@/components/AutoRefresh';
 import ThemeToggle from '@/components/ThemeToggle';
+import { SITE_NAME } from '@/lib/world';
 import { currentSession } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Good Society Tracker',
-  description: 'Shared board for our Good Society x D&D campaign',
+  title: SITE_NAME,
+  description: 'The shared notice board for our Corvane campaign: rumours, the court, the rules and the deck.',
 };
 
 export default async function RootLayout({ children }) {
@@ -43,7 +44,7 @@ export default async function RootLayout({ children }) {
       <body>
         <header className="top">
           <div className="brand">
-            <span className="crest">❦</span> Good Society Tracker
+            <span className="crest">❦</span> {SITE_NAME}
           </div>
           <div className="top-right">
           {user && (

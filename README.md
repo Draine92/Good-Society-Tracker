@@ -1,4 +1,4 @@
-# Good Society Tracker
+# The Corvane Concord (Good Society Tracker)
 
 A small shared web app for a D&D x Good Society campaign. The DM and players log in and share:
 

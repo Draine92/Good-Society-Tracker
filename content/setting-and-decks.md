@@ -7,7 +7,7 @@ Card numbers (#1-66) match the base Good Society deck, so the playsets and the r
 
 ## 1. Setting primer (seed)
 
-**The Concord.** A realm of old Houses bound together by the Concord, a treaty-oath that sets rank, precedence and who may marry whom. The capital hosts **the Season**, when the Houses gather for balls, hunts and negotiations. The countryside is run from great estates, most of them tied to a source of magic (a ley-well, a bonded dragon, an ancestral ward-stone).
+**Corvane.** The world, and the realm at the centre of this story: a land of old Houses, each ruled by great families of rank, wealth and means. Every noble lives by **the Concord**, an Oath and a way of life that sets rank, precedence, manners and who may marry whom. To break the Concord is to lose your Standing. The capital hosts **the Season**, when the Houses gather for balls, hunts and negotiations. The countryside is run from great estates, most of them tied to a source of magic (a ley-well, a bonded dragon, an ancestral ward-stone).
 
 **Core tensions to play with**
 - **Bound estates:** an estate and its magic pass by oath, not just by will. Inheritance disputes can be literally magical.
@@ -20,7 +20,7 @@ Card numbers (#1-66) match the base Good Society deck, so the playsets and the r
 | Base | Fantasy equivalent | Flavour |
 |---|---|---|
 | Old Money | **Ancient House** | Centuries of land and tradition |
-| Peerage | **High House** | Holds a seat and a title in the Concord |
+| Peerage | **High House** | Holds a seat and a title among the great Houses |
 | New Money | **Counting-House** | Trade and industry, rich but not welcome |
 | Humble Origins | **Lesser Line** | Poor branch of a good name |
 | Clergy | **Temple House** | Moral weight, modest purse |
@@ -28,7 +28,7 @@ Card numbers (#1-66) match the base Good Society deck, so the playsets and the r
 | Ill-Reputed | **Shadowed House** | A scandal sits over every dinner |
 | Foreign | **Far-Court** | From another realm, culture or plane |
 
-Any species can appear, and the Concord does not treat species as a barrier to rank. It does treat origin as one.
+Any species can appear in Corvane, and the Concord does not treat species as a barrier to rank. It does treat origin as one.
 
 ---
 

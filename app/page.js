@@ -4,7 +4,7 @@ import { q, currentSession } from '@/lib/db';
 import Flash from '@/components/Flash';
 import Pips from '@/components/Pips';
 import { MapThumb } from '@/components/MapViewer';
-import { WORLD_NAME } from '@/lib/world';
+import { SITE_NAME } from '@/lib/world';
 import { CHAPTERS } from '@/lib/rules-data';
 import { DESIRES, RELATIONSHIPS, CONNECTIONS } from '@/lib/deck-data';
 
@@ -38,8 +38,8 @@ export default async function NoticeBoard({ searchParams }) {
       <Flash searchParams={searchParams} />
       <div className="board">
         <div className="plank">
-          <h1>Notice Board of {WORLD_NAME}</h1>
-          <span>Session {session}</span>
+          <h1>{SITE_NAME}</h1>
+          <span>Notice Board · Session {session}</span>
         </div>
 
         <div className="board-layout">

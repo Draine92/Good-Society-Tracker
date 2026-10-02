@@ -155,7 +155,7 @@ Fifteen levels is long, so the campaign runs in four acts that follow 5e's tiers
 | Act | Levels | Scale of play | Typical stakes |
 |---|---|---|---|
 | I | 5-8 | Local: a few Houses, one region | Inheritance, marriages, feuds, the first threat |
-| II | 9-12 | The Concord: the capital and the great Houses | Alliances, succession, treaties, a secret that threatens the realm |
+| II | 9-12 | The capital and the great Houses of Corvane | Alliances, succession, treaties, a secret that threatens the realm |
 | III | 13-16 | The realm and neighbouring powers | War, a crisis in the ward-network, rival realms |
 | IV | 17-20 | The world and beyond | Planar threats, remaking the Concord, final reckonings |
 
