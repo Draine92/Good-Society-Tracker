@@ -28,7 +28,7 @@ Anything that breaks the agreement gets rewound and replayed.
 ## 3. Player-Built NPCs (Connections)
 - **Who:** each player builds 1 NPC for each of the other two PCs. Every PC ends up with 2 NPCs from 2 different authors.
 - **Build:** draw cards from the Deck of Connections (#37-66), pick the a or b side, choose a relationship to the target PC, and fill in a sheet:
-  - Name
+  - Name (the card gives only a title, such as "The Duelist"; you choose who they are)
   - Relationship to target PC
   - Opinion of target PC
   - Notes

@@ -156,40 +156,40 @@ Public side first, private side second. Both sides apply to the giver and taker.
 
 ## 4. Connection cards (#37-66)
 
-Each card has two sides (a and b). Pick one when you draw it. Species, wealth and age can be changed freely.
+Each card has two sides (a and b). Pick one when you draw it. Each card is a title, not a person: the player who takes it chooses the name. Species, gender, wealth and age can be changed freely.
 
-| # | Name | Side A | Side B |
+| # | Title | Side A | Side B |
 |---|---|---|---|
-| 37 | Ilvane Sorrel | Court healer-mage, trusted with the high table's secrets. | Hedge-healer, in debt, resents the nobility. |
-| 38 | Brother Corwen | Hearth-temple peacemaker. Cannot rest while two people are at odds. | Retired adventurer turned innkeeper. Owns half the high street. |
-| 39 | Tobias Rook | Arena duelist with fans and gambling debts. | Disgraced knight, charming, one scandal from ruin. |
-| 40 | Wren Aldermere | Teenage heir who hides in libraries and knows every secret. | Teenage prodigy with a bonded familiar. Her House defers to her. |
-| 41 | Odalys Verre | Matchmaker to the courts. Spouse always away at sea. | Seer whose predictions quietly steer marriages. |
-| 42 | Pip Thistlewick | Halfling clerk of wards, meticulous, soft-hearted. | Halfling bard-preacher in love with his own voice. |
-| 43 | Dorian Vale | Dandy and wit, scornful of work. | Second son dodging his family's demand to join the Banner Guard. |
-| 44 | Bettina Quill | Gnome gossip-columnist and social chair. | Newly rich mother of three. Her children are the way to her heart. |
-| 45 | Aldous Penhallow | Recently wealthy, kind and naive. | Inherited a barony, and suspects every suitor. |
-| 46 | Silas Thorne | Counting-House master who hides his humble origins. | Ruthless financier behind a gentle mask. |
-| 47 | Seraphine Ashgrove | High House socialite, very rich. | Social tactician, one step ahead of you. |
-| 48 | Edmund Pell | Archivist of the Royal Registry. Knows who is legitimate. | Quietly sells "improved" pedigrees. |
-| 49 | Margit Stonehelm | Dwarf heiress, sharp-tongued secret romantic. | Heartbroken after a broken betrothal. The scandal lingers. |
-| 50 | Orrin Vess | Wandering cartographer hired by Houses to settle borders. | Smuggler-pilot who carries nobles' secrets between cities. |
-| 51 | Tamsin Reeve | Royal tax assessor, incorruptible and dreaded at dinner. | Assessor in debt, quietly open to bribes. |
-| 52 | Anastasya Moreau | Widow whose husband died in a griffon race. | Artist-enchanter who hosts bewildering salons. |
-| 53 | Ser Halvard Thrane | Retired royal champion, a living legend bored in peacetime. | Aging champion hiding a failing sword arm. |
-| 54 | Magistrate Ilse Marrow | Circuit judge of the Concord courts, fair and stern. | Judge owned by a House's patronage. |
-| 55 | Mara Quickwater | Short-tempered adventurer, fiercely independent. | Wanderer who craves travel and has no means. |
-| 56 | Mother Hesper | Self-made philanthropist, generous with second chances. | Risen from humble origins, advises others on how. |
-| 57 | Dowager Hildegard | Formidable matriarch, champion of friends and terror of enemies. | Widow who gives advice as constructive insults. |
-| 58 | Cassia Vane | Calculating gossip-broker. | Famed illusionist-actress with a past scandal. |
-| 59 | Zephyr Ondrel | Fae envoy bound by treaty, delighted by human manners. | Fae bargain-broker who trades in names and favours. |
-| 60 | Brass | Construct servant of a House for centuries. Remembers everything. | Newly awakened construct questioning its bound service. |
-| 61 | Vesper Dunmoor | Courteous undertaker-necromancer who tends the House dead and their secrets. | Grave-warden with a grudge against a House. |
-| 62 | Kestrel Vaine | Falconer and spy for the Crown's Eyes. | Falconer for hire who sells the same to rival Houses. |
-| 63 | Gwyneth Marsh | Dragon-warden who manages a House's dragon and its temper. | Dragon-heir whose bonded dragon is rumoured to be ill. |
-| 64 | Marlene Crowe | Vengeful and petty. Switches sides for a price. | Scheming ruiner of reputations. Never forgives. |
-| 65 | Lord Garrick Holt | Wealthy peer, stern and businesslike. | Peer in decline, softens around children. |
-| 66 | Fran Wickham | Reserved and anxious. Secretly writes financial pamphlets under a pen name. | Gentle, runs her father's business, resigned to spinsterhood. |
+| 37 | The Court Healer | Court healer-mage, trusted with the high table's secrets. | Hedge-healer, in debt, resents the nobility. |
+| 38 | The Temple Peacemaker | Hearth-temple peacemaker. Cannot rest while two people are at odds. | Retired adventurer turned innkeeper. Owns half the high street. |
+| 39 | The Duelist | Arena duelist with fans and gambling debts. | Disgraced knight, charming, one scandal from ruin. |
+| 40 | The Young Prodigy | Teenage heir who hides in libraries and knows every secret. | Teenage prodigy with a bonded familiar. Their House defers to them. |
+| 41 | The Matchmaker | Matchmaker to the courts. Spouse always away at sea. | Seer whose predictions quietly steer marriages. |
+| 42 | The Halfling Confidant | Halfling clerk of wards, meticulous, soft-hearted. | Halfling bard-preacher in love with their own voice. |
+| 43 | The Dandy | Dandy and wit, scornful of work. | Second son dodging his family's demand to join the Banner Guard. |
+| 44 | The Society Gossip | Gnome gossip-columnist and social chair. | Newly rich mother of three. Her children are the way to her heart. |
+| 45 | The Newly Wealthy | Recently wealthy, kind and naive. | Inherited a barony, and suspects every suitor. |
+| 46 | The Counting-House Master | Counting-House master who hides his humble origins. | Ruthless financier behind a gentle mask. |
+| 47 | The High House Socialite | High House socialite, very rich. | Social tactician, one step ahead of you. |
+| 48 | The Registry Archivist | Archivist of the Royal Registry. Knows who is legitimate. | Quietly sells "improved" pedigrees. |
+| 49 | The Dwarf Heiress | Dwarf heiress, sharp-tongued secret romantic. | Heartbroken after a broken betrothal. The scandal lingers. |
+| 50 | The Cartographer | Wandering cartographer hired by Houses to settle borders. | Smuggler-pilot who carries nobles' secrets between cities. |
+| 51 | The Tax Assessor | Royal tax assessor, incorruptible and dreaded at dinner. | Assessor in debt, quietly open to bribes. |
+| 52 | The Artist-Enchanter | Widow whose husband died in a griffon race. | Artist-enchanter who hosts bewildering salons. |
+| 53 | The Royal Champion | Retired royal champion, a living legend bored in peacetime. | Aging champion hiding a failing sword arm. |
+| 54 | The Magistrate | Circuit judge of the Concord courts, fair and stern. | Judge owned by a House's patronage. |
+| 55 | The Adventurer | Short-tempered adventurer, fiercely independent. | Wanderer who craves travel and has no means. |
+| 56 | The Philanthropist | Self-made philanthropist, generous with second chances. | Risen from humble origins, advises others on how. |
+| 57 | The Dowager | Formidable matriarch, champion of friends and terror of enemies. | Widow who gives advice as constructive insults. |
+| 58 | The Gossip-Broker | Calculating gossip-broker. | Famed illusionist-actress with a past scandal. |
+| 59 | The Fae Envoy | Fae envoy bound by treaty, delighted by human manners. | Fae bargain-broker who trades in names and favours. |
+| 60 | The Construct Servant | Construct servant of a House for centuries. Remembers everything. | Newly awakened construct questioning its bound service. |
+| 61 | The Undertaker | Courteous undertaker-necromancer who tends the House dead and their secrets. | Grave-warden with a grudge against a House. |
+| 62 | The Falconer | Falconer and spy for the Crown's Eyes. | Falconer for hire who sells the same to rival Houses. |
+| 63 | The Dragon-Warden | Dragon-warden who manages a House's dragon and its temper. | Dragon-heir whose bonded dragon is rumoured to be ill. |
+| 64 | The Schemer | Vengeful and petty. Switches sides for a price. | Scheming ruiner of reputations. Never forgives. |
+| 65 | The Wealthy Peer | Wealthy peer, stern and businesslike. | Peer in decline, softens around children. |
+| 66 | The Reserved Heir | Reserved and anxious. Secretly writes financial pamphlets under a pen name. | Gentle, runs a parent's business, resigned to a quiet single life. |
 
 ---
 
