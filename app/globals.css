@@ -362,3 +362,36 @@ nav.book-toc { display: block; }
   body::after { right: calc(50% - 704px); background-image: url('/wing-right.webp'); }
   main { position: relative; z-index: 1; }
 }
+
+/* ---------- Printed-style cards (Connections and Houses) ---------- */
+.pcard.img .face .rc { position: absolute; inset: 0; container-type: inline-size; overflow: hidden; color: #1c1418; }
+.rc { --ink: #1c1418; background: var(--ground); }
+.rc.sage { --ground: radial-gradient(ellipse 80% 50% at 50% 36%, #f3f9ef 0%, rgba(243,249,239,0) 72%), linear-gradient(#b0d0ae, #d0e6cc 45%, #a6caa5); }
+.rc.lilac { --ground: radial-gradient(ellipse 80% 50% at 50% 36%, #f6f1fc 0%, rgba(246,241,252,0) 72%), linear-gradient(#c3b3e0, #e3d9f3 45%, #b9a8da); }
+.rc-line { position: absolute; left: 6.55cqw; right: 6.55cqw; top: 6.3cqw; bottom: 6.3cqw; border: .38cqw solid var(--ink); border-top: 0; }
+.rc-c { position: absolute; width: 23cqw; height: 23cqw; background: url('/card-corner.png') no-repeat center / 100% 100%; pointer-events: none; }
+.rc-c.tl { left: 6.3cqw; top: 6.05cqw; }
+.rc-c.tr { right: 6.3cqw; top: 6.05cqw; transform: scaleX(-1); }
+.rc-c.bl { left: 6.3cqw; bottom: 6.05cqw; transform: scaleY(-1); }
+.rc-c.br { right: 6.3cqw; bottom: 6.05cqw; transform: scale(-1, -1); }
+.rc-top { position: absolute; left: 6.55cqw; right: 6.55cqw; top: 6.3cqw; transform: translateY(-50%); display: flex; align-items: center; gap: 2.2cqw; }
+.rc-top span { flex: 1; height: .38cqw; background: var(--ink); }
+.rc-top span:first-child { margin-left: 22cqw; } .rc-top span:last-child { margin-right: 22cqw; }
+.rc-top b { font-family: var(--font-head); font-weight: 600; font-size: 3.6cqw; letter-spacing: .06em; line-height: 1; }
+.rc-kind { position: absolute; top: 13cqw; left: 0; right: 0; text-align: center; font-family: var(--font-head); font-weight: 400; font-size: 5.4cqw; letter-spacing: .22em; text-transform: uppercase; padding-left: .22em; }
+.rc-sub { position: absolute; top: 21.5cqw; left: 25cqw; right: 25cqw; display: flex; align-items: center; gap: 2.4cqw; }
+.rc-sub span { flex: 1; height: .3cqw; background: var(--ink); }
+.rc-sub em { font-family: var(--font-head); font-style: normal; font-size: 3.1cqw; letter-spacing: .16em; text-transform: uppercase; white-space: nowrap; }
+.rc-body { position: absolute; left: 13cqw; right: 13cqw; top: 29cqw; bottom: 70cqw; display: flex; align-items: center; justify-content: center; text-align: center; }
+.rc.noart .rc-body { bottom: 13cqw; top: 28cqw; }
+.rc-quote { margin: 0; font-family: var(--font-body); font-style: italic; font-weight: 400; font-size: 8.8cqw; line-height: 1.22; }
+.rc-text { font-family: var(--font-body); font-size: 4.5cqw; line-height: 1.42; width: 100%; }
+.rc-text p { margin: 0 0 3.4cqw; }
+.rc-text h4 { margin: 0 0 1.6cqw; font-family: var(--font-head); font-weight: 600; font-size: 3.8cqw; letter-spacing: .16em; text-transform: uppercase; }
+.rc-text hr { border: 0; height: .3cqw; width: 28%; background: var(--ink); margin: 4.2cqw auto; }
+.rc-text .rc-note { font-style: italic; font-size: 3.7cqw; opacity: .75; margin: 5cqw 0 0; }
+.rc-art { position: absolute; left: 13cqw; right: 13cqw; bottom: 12cqw; width: 74cqw; height: auto; color: #3b2a31; }
+.rc-shield { left: 21cqw; right: 21cqw; width: 58cqw; }
+.rc-shield svg { display: block; width: 100%; height: auto; }
+.rc-knot { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); color: #7d1f2b; display: block; }
+.rc-knot svg { width: 17cqw; height: auto; }

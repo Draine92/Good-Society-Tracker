@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { ConnectionFront, ConnectionBack, HouseFront, HouseBack } from './PrintCard';
 
 function Card({ front, back, tone, orn, num, big }) {
   const [flipped, setFlipped] = useState(false);
@@ -27,6 +28,25 @@ function Card({ front, back, tone, orn, num, big }) {
         )}
       </span>
     </button>
+  );
+}
+
+function FlipCard({ label, front, back, big }) {
+  const [flipped, setFlipped] = useState(false);
+  return (
+    <div className="imgcard-wrap">
+      <button
+        type="button"
+        className={`pcard img${flipped ? ' flipped' : ''}${big ? ' big' : ''}`}
+        onClick={() => setFlipped((f) => !f)}
+        aria-label={`${label}. Turn the card over`}
+      >
+        <span className="pcard-inner">
+          <span className="face front">{front}</span>
+          <span className="face back">{back}</span>
+        </span>
+      </button>
+    </div>
   );
 }
 
@@ -73,35 +93,19 @@ export default function DeckBrowser({ desires, relationships, connections, famil
     }
     if (tab === 'connections') {
       return (
-        <Card
-          key={item.n} big={big} tone={meta.tone} orn={meta.orn} num={item.n}
-          front={
-            <>
-              <span className="kind">Side A</span>
-              <strong className="ctitle">{item.name}</strong>
-              <span className="ctext">{item.a}</span>
-            </>
-          }
-          back={
-            <>
-              <span className="kind">Side B</span>
-              <strong className="ctitle">{item.name}</strong>
-              <span className="ctext">{item.b}</span>
-            </>
-          }
+        <FlipCard
+          key={item.n} big={big} label={`${item.name}, connection ${item.n}`}
+          front={<ConnectionFront n={item.n} name={item.name} />}
+          back={<ConnectionBack n={item.n} a={item.a} b={item.b} />}
         />
       );
     }
+    const i = families.indexOf(item);
     return (
-      <Card
-        key={item.name} big={big} tone={meta.tone} orn={meta.orn}
-        front={
-          <>
-            <span className="kind">{item.base}</span>
-            <strong className="ctitle">{item.name}</strong>
-            <span className="ctext">{item.flavour}</span>
-          </>
-        }
+      <FlipCard
+        key={item.name} big={big} label={`${item.name}, House`}
+        front={<HouseFront i={i} name={item.name} base={item.base} />}
+        back={<HouseBack i={i} name={item.name} base={item.base} flavour={item.flavour} />}
       />
     );
   };
