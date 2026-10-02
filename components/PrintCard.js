@@ -2,20 +2,8 @@
 // italic centred wording, a small illustration, and a tinted ground.
 import CelticKnot from './CelticKnot';
 
-export function Letter() {
-  return (
-    <svg viewBox="0 0 200 120" aria-hidden="true" className="rc-art">
-      <g fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" strokeLinecap="round">
-        <rect x="22" y="26" width="156" height="84" rx="4" fill="#fffaf0" />
-        <path d="M22 30 L100 78 L178 30" />
-        <path d="M22 108 L82 62 M178 108 L118 62" opacity=".55" />
-        <path d="M60 14 C70 4 92 6 100 18 C108 6 130 4 140 14" opacity=".7" />
-      </g>
-      <circle cx="100" cy="80" r="15" fill="#7d1f2b" stroke="#4a1018" strokeWidth="2" />
-      <circle cx="100" cy="80" r="9" fill="none" stroke="#e7b9bf" strokeWidth="1.5" />
-      <path d="M100 73 L103 79 L109 80 L104 84 L106 90 L100 86 L94 90 L96 84 L91 80 L97 79 Z" fill="#e7b9bf" />
-    </svg>
-  );
+export function Sigil() {
+  return <span className="rc-art rc-sigil" role="img" aria-label="Ornamental sigil" />;
 }
 
 export function Shield() {
@@ -50,7 +38,7 @@ function Frame({ num, kind, sub, children, art, tone }) {
 
 export function ConnectionFront({ n, name }) {
   return (
-    <Frame tone="sage" num={`#${n}`} kind="Connection" sub="Person" art={<Letter />}>
+    <Frame tone="sage" num={`#${n}`} kind="Connection" sub="Person" art={<Sigil />}>
       <p className="rc-quote">{name}</p>
     </Frame>
   );
