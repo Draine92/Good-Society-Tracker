@@ -222,15 +222,30 @@ export async function addRelationshipCard(fd) {
   const other = int(fd, 'other_id');
   const card = int(fd, 'card');
   const role = str(fd, 'role', 10);
+  const isPublic = str(fd, 'visibility', 10) !== 'private';
   if (!(await canEditCharacter(user, me))) fail('/', 'Not allowed.');
   if (card < 23 || card > 36) fail(meUrl(user, me), 'Pick a relationship card.');
   if (!other || other === me) fail(meUrl(user, me), 'Pick the other character for this relationship.');
   const o = await q('select 1 from characters where id = $1', [other]);
   if (!o.length) fail(meUrl(user, me), 'That character does not exist.');
   const [giver, taker] = role === 'taker' ? [other, me] : [me, other];
-  await q('insert into relationship_cards (card, giver_id, taker_id) values ($1,$2,$3)', [card, giver, taker]);
+  await q('insert into relationship_cards (card, giver_id, taker_id, is_public) values ($1,$2,$3,$4)', [card, giver, taker, isPublic]);
   revalidatePath('/', 'layout');
   redirect(`${meUrl(user, me)}${user.role === 'dm' ? '&' : '?'}ok=Relationship+card+added#cards`);
+}
+
+export async function setRelationshipVisibility(fd) {
+  const user = await requireUser();
+  const id = int(fd, 'id');
+  const me = int(fd, 'character_id');
+  const rows = await q('select giver_id, taker_id from relationship_cards where id = $1', [id]);
+  if (!rows.length) fail(meUrl(user, me), 'That relationship card is gone.');
+  const mayEdit = (await canEditCharacter(user, rows[0].giver_id)) || (await canEditCharacter(user, rows[0].taker_id));
+  if (!mayEdit) fail('/', 'Not allowed.');
+  const makePublic = str(fd, 'visibility', 10) === 'public';
+  await q('update relationship_cards set is_public = $2 where id = $1', [id, makePublic]);
+  revalidatePath('/', 'layout');
+  redirect(`${meUrl(user, me)}${user.role === 'dm' ? '&' : '?'}ok=${makePublic ? 'Relationship+is+now+public' : 'Relationship+is+now+private'}#cards`);
 }
 
 export async function removeRelationshipCard(fd) {

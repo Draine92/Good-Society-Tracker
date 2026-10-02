@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { DESIRES, RELATIONSHIPS, CONNECTIONS, FAMILIES } from '@/lib/deck-data';
 import { ImgCard, StillImg, HouseFlip, ConnectionFlip } from './CardViews';
-import { setDesireCard, setHouseCard, addRelationshipCard, removeRelationshipCard } from '@/app/actions';
+import { setDesireCard, setHouseCard, addRelationshipCard, removeRelationshipCard, setRelationshipVisibility } from '@/app/actions';
 
 const pad = (n) => String(n).padStart(2, '0');
 
@@ -20,12 +20,32 @@ function RelRole({ r, characterId }) {
   );
 }
 
+function RelControls({ r, characterId, makeTo }) {
+  return (
+    <div className="row">
+      <form action={setRelationshipVisibility}>
+        <input type="hidden" name="id" value={r.id} />
+        <input type="hidden" name="character_id" value={characterId} />
+        <input type="hidden" name="visibility" value={makeTo} />
+        <button className="ghost small">{makeTo === 'private' ? 'Make private' : 'Make public'}</button>
+      </form>
+      <form action={removeRelationshipCard}>
+        <input type="hidden" name="id" value={r.id} />
+        <input type="hidden" name="character_id" value={characterId} />
+        <button className="ghost small">Remove</button>
+      </form>
+    </div>
+  );
+}
+
 /* mode: 'edit' shows the choosers (the player, or the DM editing); 'view' is read-only (DM overview). */
 export default function PlayerCards({ c, cards, characters = [], mode = 'edit' }) {
   const desire = cards.desire_card ? DESIRES.find((d) => d.n === cards.desire_card) : null;
   const house = cards.house != null ? FAMILIES[cards.house] : null;
   const others = characters.filter((o) => o.id !== c.id);
   const edit = mode === 'edit';
+  const pubRels = cards.relationships.filter((r) => r.is_public);
+  const privRels = cards.relationships.filter((r) => !r.is_public);
   const nothing = !desire && !house && !cards.relationships.length && !cards.connections.length && !cards.authored.length;
 
   return (
@@ -45,21 +65,15 @@ export default function PlayerCards({ c, cards, characters = [], mode = 'edit' }
           )}
 
           <h4>Relationships <small>public side</small></h4>
-          {cards.relationships.length === 0 ? (
-            <p className="muted">No relationship cards yet.</p>
+          {pubRels.length === 0 ? (
+            <p className="muted">No public relationship cards.</p>
           ) : (
             <div className="cardrow">
-              {cards.relationships.map((r) => (
+              {pubRels.map((r) => (
                 <div key={r.id} className="cardcol">
                   <StillImg n={r.card} side="front" name="Relationship" />
                   <RelRole r={r} characterId={c.id} />
-                  {edit && (
-                    <form action={removeRelationshipCard}>
-                      <input type="hidden" name="id" value={r.id} />
-                      <input type="hidden" name="character_id" value={c.id} />
-                      <button className="ghost small">Remove</button>
-                    </form>
-                  )}
+                  {edit && <RelControls r={r} characterId={c.id} makeTo="private" />}
                 </div>
               ))}
             </div>
@@ -113,15 +127,30 @@ export default function PlayerCards({ c, cards, characters = [], mode = 'edit' }
             <p className="muted">No desire card chosen.</p>
           )}
 
-          <h4>Relationships <small>private side</small></h4>
-          {cards.relationships.length === 0 ? (
-            <p className="muted">No relationship cards yet.</p>
+          <h4>Relationships <small>private side of the public ones</small></h4>
+          {pubRels.length === 0 ? (
+            <p className="muted">None.</p>
           ) : (
             <div className="cardrow">
-              {cards.relationships.map((r) => (
+              {pubRels.map((r) => (
                 <div key={r.id} className="cardcol">
                   <StillImg n={r.card} side="back" name="Relationship" />
                   <RelRole r={r} characterId={c.id} />
+                </div>
+              ))}
+            </div>
+          )}
+
+          <h4>Hidden relationships <small>the table cannot see these at all</small></h4>
+          {privRels.length === 0 ? (
+            <p className="muted">None. Mark a relationship private to keep it off the public sheet.</p>
+          ) : (
+            <div className="cardrow">
+              {privRels.map((r) => (
+                <div key={r.id} className="cardcol">
+                  <ImgCard n={r.card} name="Relationship" />
+                  <RelRole r={r} characterId={c.id} />
+                  {edit && <RelControls r={r} characterId={c.id} makeTo="public" />}
                 </div>
               ))}
             </div>
@@ -191,6 +220,11 @@ export default function PlayerCards({ c, cards, characters = [], mode = 'edit' }
                   {others.map((o) => (
                     <option key={o.id} value={o.id}>{o.name || o.display_name}</option>
                   ))}
+                </select>
+                <label>Who can see this relationship?</label>
+                <select name="visibility" defaultValue="public">
+                  <option value="public">Public: the table sees the public side</option>
+                  <option value="private">Private: only me, them and the DM</option>
                 </select>
                 <label>Your part on the card</label>
                 <select name="role" defaultValue="giver">

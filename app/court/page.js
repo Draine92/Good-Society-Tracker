@@ -16,7 +16,7 @@ export default async function Home({ searchParams }) {
             coalesce(nullif(tc.name,''), tu.display_name) as taker_name
        from relationship_cards r
        join characters gc on gc.id = r.giver_id join users gu on gu.id = gc.owner_id
-       join characters tc on tc.id = r.taker_id join users tu on tu.id = tc.owner_id order by r.id`
+       join characters tc on tc.id = r.taker_id join users tu on tu.id = tc.owner_id where r.is_public order by r.id`
   );
   const collab = await getSetting('collab', '');
   const session = await currentSession();
