@@ -19,7 +19,7 @@
     --paper: #3a2d1a;
     --tex-page: url('/parch-page-dark.jpg');
     --tex-panel: url('/parch-panel-dark.jpg');
-    --top-bg: var(--paper-2) var(--tex-panel); --top-ink: var(--ink); --top-soft: var(--ink-soft); --top-brand: var(--wine); --top-hover: var(--wine); --top-line: var(--line); --top-gap: var(--paper-2);
+    --top-bg: linear-gradient(#5e0f1f, #44091a); --top-ink: #f3e6d3; --top-soft: #cfa9a6; --top-brand: #f0d070; --top-hover: #f0d070; --top-line: rgba(240,208,112,.45); --top-gap: #500c1c;
     --tex-note: url('/parch-note-dark.jpg'); --note-board: #66502e;
     --paper-2: #4d3b22;
     --ink: #f3e6d3;
@@ -37,7 +37,7 @@
     --paper: #3a2d1a;
     --tex-page: url('/parch-page-dark.jpg');
     --tex-panel: url('/parch-panel-dark.jpg');
-    --top-bg: var(--paper-2) var(--tex-panel); --top-ink: var(--ink); --top-soft: var(--ink-soft); --top-brand: var(--wine); --top-hover: var(--wine); --top-line: var(--line); --top-gap: var(--paper-2);
+    --top-bg: linear-gradient(#5e0f1f, #44091a); --top-ink: #f3e6d3; --top-soft: #cfa9a6; --top-brand: #f0d070; --top-hover: #f0d070; --top-line: rgba(240,208,112,.45); --top-gap: #500c1c;
     --tex-note: url('/parch-note-dark.jpg'); --note-board: #66502e;
     --paper-2: #4d3b22;
     --ink: #f3e6d3;
