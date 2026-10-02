@@ -1,25 +1,12 @@
 // A card drawn in the style of the printed Good Society cards: ornate ink corners,
 // italic centred wording, a small illustration, and a tinted ground.
-import CelticKnot from './CelticKnot';
 
 export function Sigil() {
   return <span className="rc-art rc-sigil" role="img" aria-label="Ornamental sigil" />;
 }
 
-export function Shield() {
-  return (
-    <div className="rc-art rc-shield" aria-hidden="true">
-      <svg viewBox="0 0 200 150">
-        <g fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M100 8 C84 20 62 24 44 22 C44 74 56 112 100 142 C144 112 156 74 156 22 C138 24 116 20 100 8 Z" fill="#fffaf0" />
-          <path d="M100 18 C87 27 70 31 54 30 C55 74 65 104 100 130 C135 104 145 74 146 30 C130 31 113 27 100 18 Z" opacity=".5" />
-          <path d="M40 62 C22 56 14 40 18 26 C30 30 38 44 40 62 Z M30 92 C14 84 8 68 12 54 C24 58 30 74 30 92 Z" />
-          <path d="M160 62 C178 56 186 40 182 26 C170 30 162 44 160 62 Z M170 92 C186 84 192 68 188 54 C176 58 170 74 170 92 Z" />
-        </g>
-      </svg>
-      <span className="rc-knot"><CelticKnot size={46} gap="#fffaf0" /></span>
-    </div>
-  );
+export function Medallion() {
+  return <span className="rc-art rc-medal" role="img" aria-label="Ornamental medallion" />;
 }
 
 function Frame({ num, kind, sub, children, art, tone }) {
@@ -59,7 +46,7 @@ export function ConnectionBack({ n, a, b }) {
 }
 export function HouseFront({ i, name, base }) {
   return (
-    <Frame tone="lilac" num={ROMAN[i]} kind="House" sub={base} art={<Shield />}>
+    <Frame tone="lilac" num={ROMAN[i]} kind="House" sub={base} art={<Medallion />}>
       <p className="rc-quote">{name}</p>
     </Frame>
   );

@@ -407,3 +407,5 @@ button.danger { background: #8a1c1c; color: #fff; }
 .top .candle-btn:hover { background: rgba(255,255,255,.12); }
 
 .rc-sigil { left: 22cqw; right: 22cqw; bottom: 14cqw; width: 56cqw; aspect-ratio: 1; background: url('/connection-sigil.png') no-repeat center / contain; }
+
+.rc-medal { left: 17cqw; right: 17cqw; bottom: 11cqw; width: 66cqw; aspect-ratio: 1; background: url('/house-medallion.png') no-repeat center / contain; }
