@@ -330,3 +330,14 @@ nav.book-toc { display: block; }
 
 /* Wide tables scroll sideways on phones instead of pushing the page wider */
 @media (max-width: 560px) { table { display: block; overflow-x: auto; max-width: 100%; } }
+
+/* ---------- Gilded side panels (wide screens only) ---------- */
+@media (min-width: 1420px) {
+  body::before, body::after {
+    content: ''; position: fixed; top: 76px; bottom: 14px; width: 150px; pointer-events: none; z-index: 0;
+    background: no-repeat center top / contain; filter: drop-shadow(0 3px 6px rgba(0,0,0,.28));
+  }
+  body::before { left: calc(50% - 704px); background-image: url('/wing-left.webp'); }
+  body::after { right: calc(50% - 704px); background-image: url('/wing-right.webp'); }
+  main { position: relative; z-index: 1; }
+}
