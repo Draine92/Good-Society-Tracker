@@ -30,16 +30,14 @@ export function ConnectionFront({ n, name }) {
     </Frame>
   );
 }
-export function ConnectionBack({ n, a, b }) {
+export function ConnectionBack({ n, a, b, only }) {
   return (
-    <Frame tone="sage" num={`#${n}`} kind="Connection" sub="Choose a side">
+    <Frame tone="sage" num={`#${n}`} kind="Connection" sub={only ? `Side ${only.toUpperCase()}` : 'Choose a side'}>
       <div className="rc-text">
-        <h4>Side A</h4>
-        <p>{a}</p>
-        <hr />
-        <h4>Side B</h4>
-        <p>{b}</p>
-        <p className="rc-note">The player who takes this card chooses the name.</p>
+        {(!only || only === 'a') && (<><h4>Side A</h4><p>{a}</p></>)}
+        {!only && <hr />}
+        {(!only || only === 'b') && (<><h4>Side B</h4><p>{b}</p></>)}
+        {!only && <p className="rc-note">The player who takes this card chooses the name.</p>}
       </div>
     </Frame>
   );

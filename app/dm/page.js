@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import { requireDM } from '@/lib/auth';
 import { q, getSetting, currentSession } from '@/lib/db';
+import { FAMILIES } from '@/lib/deck-data';
 import { createPlayer, removePlayer, resetPassword, endSession, addLog, deleteLog, saveCollab } from '../actions';
 import Flash from '@/components/Flash';
+import PlayerCards from '@/components/PlayerCards';
+import { loadCards } from '@/lib/cards';
 
 export default async function DMPage({ searchParams }) {
   await requireDM();
@@ -14,6 +17,7 @@ export default async function DMPage({ searchParams }) {
   const npcs = await q(
     'select n.*, u.display_name as author from npcs n join users u on u.id = n.author_id order by n.id'
   );
+  const cardsByChar = Object.fromEntries(await Promise.all(characters.map(async (c) => [c.id, await loadCards(c.id)])));
   const collab = await getSetting('collab', '');
   const log = await q('select * from session_log order by id desc limit 20');
   const rumourCounts = await q("select status, count(*)::int as n from rumours group by status");
@@ -121,6 +125,14 @@ export default async function DMPage({ searchParams }) {
               <h3>{c.name || c.display_name}</h3>
               <Link href={`/me?char=${c.id}`}>Edit character</Link>
             </div>
+            <details className="dm-cards">
+              <summary>
+                Cards: {cardsByChar[c.id]?.desire_card ? `desire #${cardsByChar[c.id].desire_card}` : 'no desire'} ·{' '}
+                {cardsByChar[c.id]?.house != null ? FAMILIES[cardsByChar[c.id].house].name : 'no House'} ·{' '}
+                {cardsByChar[c.id]?.relationships.length || 0} relationship(s) · {cardsByChar[c.id]?.connections.length || 0} connection(s)
+              </summary>
+              <PlayerCards c={c} cards={cardsByChar[c.id]} characters={characters} mode="view" />
+            </details>
             <div className="secret">
               <div><strong>Desire:</strong> {c.desire || <span className="muted">not set</span>}</div>
               {c.private_notes && <div><strong>Private notes:</strong> {c.private_notes}</div>}

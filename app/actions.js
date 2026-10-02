@@ -192,6 +192,60 @@ export async function saveCharacter(fd) {
   redirect(`${meUrl(user, id)}${user.role === 'dm' ? '&' : '?'}ok=Saved`);
 }
 
+/* ---------- chosen cards ---------- */
+
+export async function setDesireCard(fd) {
+  const user = await requireUser();
+  const id = int(fd, 'character_id');
+  if (!(await canEditCharacter(user, id))) fail('/', 'Not allowed.');
+  const card = int(fd, 'card', 0);
+  if (card !== 0 && (card < 1 || card > 22)) fail(meUrl(user, id), 'Pick a desire card from 1 to 22.');
+  await q('update characters set desire_card = $2, updated_at = now() where id = $1', [id, card || null]);
+  revalidatePath('/', 'layout');
+  redirect(`${meUrl(user, id)}${user.role === 'dm' ? '&' : '?'}ok=${card ? 'Desire+card+chosen' : 'Desire+card+cleared'}#cards`);
+}
+
+export async function setHouseCard(fd) {
+  const user = await requireUser();
+  const id = int(fd, 'character_id');
+  if (!(await canEditCharacter(user, id))) fail('/', 'Not allowed.');
+  const house = int(fd, 'house', -1);
+  if (house < -1 || house > 7) fail(meUrl(user, id), 'Pick one of the eight Houses.');
+  await q('update characters set house = $2, updated_at = now() where id = $1', [id, house >= 0 ? house : null]);
+  revalidatePath('/', 'layout');
+  redirect(`${meUrl(user, id)}${user.role === 'dm' ? '&' : '?'}ok=House+saved#cards`);
+}
+
+export async function addRelationshipCard(fd) {
+  const user = await requireUser();
+  const me = int(fd, 'character_id');
+  const other = int(fd, 'other_id');
+  const card = int(fd, 'card');
+  const role = str(fd, 'role', 10);
+  if (!(await canEditCharacter(user, me))) fail('/', 'Not allowed.');
+  if (card < 23 || card > 36) fail(meUrl(user, me), 'Pick a relationship card.');
+  if (!other || other === me) fail(meUrl(user, me), 'Pick the other character for this relationship.');
+  const o = await q('select 1 from characters where id = $1', [other]);
+  if (!o.length) fail(meUrl(user, me), 'That character does not exist.');
+  const [giver, taker] = role === 'taker' ? [other, me] : [me, other];
+  await q('insert into relationship_cards (card, giver_id, taker_id) values ($1,$2,$3)', [card, giver, taker]);
+  revalidatePath('/', 'layout');
+  redirect(`${meUrl(user, me)}${user.role === 'dm' ? '&' : '?'}ok=Relationship+card+added#cards`);
+}
+
+export async function removeRelationshipCard(fd) {
+  const user = await requireUser();
+  const id = int(fd, 'id');
+  const me = int(fd, 'character_id');
+  const rows = await q('select giver_id, taker_id from relationship_cards where id = $1', [id]);
+  if (!rows.length) fail(meUrl(user, me), 'That relationship card is already gone.');
+  const mayEdit = (await canEditCharacter(user, rows[0].giver_id)) || (await canEditCharacter(user, rows[0].taker_id));
+  if (!mayEdit) fail('/', 'Not allowed.');
+  await q('delete from relationship_cards where id = $1', [id]);
+  revalidatePath('/', 'layout');
+  redirect(`${meUrl(user, me)}${user.role === 'dm' ? '&' : '?'}ok=Relationship+card+removed#cards`);
+}
+
 export async function adjustInspiration(fd) {
   const user = await requireUser();
   const id = int(fd, 'id');
@@ -311,6 +365,10 @@ export async function saveNpc(fd) {
     fail('/npcs', 'Pick which player character this NPC is tied to.');
   }
 
+  const cardN = int(fd, 'card_n', 0);
+  if (cardN !== 0 && (cardN < 37 || cardN > 66)) fail('/npcs', 'Pick a connection card from 37 to 66.');
+  const cardSide = cardN && ['a', 'b'].includes(str(fd, 'card_side', 1)) ? str(fd, 'card_side', 1) : '';
+
   const fields = [
     name,
     target,
@@ -319,6 +377,8 @@ export async function saveNpc(fd) {
     str(fd, 'public_notes', 1000),
     str(fd, 'want', 600),
     str(fd, 'secret', 1000),
+    cardN || null,
+    cardSide,
   ];
 
   if (id) {
@@ -326,7 +386,7 @@ export async function saveNpc(fd) {
     if (!rows.length || (user.role !== 'dm' && rows[0].author_id !== user.id)) fail('/npcs', 'Not allowed.');
     await q(
       `update npcs set name=$2, target_character_id=$3, relationship=$4, opinion=$5,
-         public_notes=$6, want=$7, secret=$8 where id=$1`,
+         public_notes=$6, want=$7, secret=$8, card_n=$9, card_side=$10 where id=$1`,
       [id, ...fields]
     );
   } else {
@@ -335,8 +395,8 @@ export async function saveNpc(fd) {
       if (c[0].n >= 3) fail('/npcs', 'You already have 3 NPCs (2 plus the mid-campaign slot).');
     }
     await q(
-      `insert into npcs (author_id, name, target_character_id, relationship, opinion, public_notes, want, secret)
-       values ($1,$2,$3,$4,$5,$6,$7,$8)`,
+      `insert into npcs (author_id, name, target_character_id, relationship, opinion, public_notes, want, secret, card_n, card_side)
+       values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
       [user.id, ...fields]
     );
   }

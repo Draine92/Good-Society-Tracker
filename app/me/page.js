@@ -4,6 +4,8 @@ import { q } from '@/lib/db';
 import { saveCharacter, addTag, adjustPips, deleteTag, changeOwnPassword } from '../actions';
 import Flash from '@/components/Flash';
 import Pips from '@/components/Pips';
+import PlayerCards from '@/components/PlayerCards';
+import { loadCards } from '@/lib/cards';
 
 export default async function MePage({ searchParams }) {
   const user = await requireUser();
@@ -20,15 +22,21 @@ export default async function MePage({ searchParams }) {
     return <p className="muted">No character found for this account yet. Ask your DM.</p>;
   }
   const tags = await q('select * from tags where character_id = $1 order by kind, id', [c.id]);
+  const cards = await loadCards(c.id);
+  const allChars = await q('select c.id, c.name, u.display_name from characters c join users u on u.id = c.owner_id order by c.id');
 
   return (
     <>
       <Flash searchParams={searchParams} />
       <h1>{user.role === 'dm' ? `Editing ${c.name}` : 'My character'}</h1>
       <p className="sub">
-        Everything here is on the public sheet except your desire and private notes, which only you and the DM can see.
+        Your cards are split into public (the whole table sees them) and private (only you and the DM, plus the other character in a relationship). On the character sheet below, your secret desire and private notes are also visible only to you and the DM.
       </p>
 
+      <h2>My cards</h2>
+      <PlayerCards c={c} cards={cards} characters={allChars} mode="edit" />
+
+      <h2>Character sheet</h2>
       <form action={saveCharacter} className="card">
         <input type="hidden" name="id" value={c.id} />
         <label>Character name</label>

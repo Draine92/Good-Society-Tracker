@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { FlipCard, ImgCard } from './CardViews';
 import { ConnectionFront, ConnectionBack, HouseFront, HouseBack } from './PrintCard';
 
 function Card({ front, back, tone, orn, num, big }) {
@@ -28,46 +29,6 @@ function Card({ front, back, tone, orn, num, big }) {
         )}
       </span>
     </button>
-  );
-}
-
-function FlipCard({ label, front, back, big }) {
-  const [flipped, setFlipped] = useState(false);
-  return (
-    <div className="imgcard-wrap">
-      <button
-        type="button"
-        className={`pcard img${flipped ? ' flipped' : ''}${big ? ' big' : ''}`}
-        onClick={() => setFlipped((f) => !f)}
-        aria-label={`${label}. Turn the card over`}
-      >
-        <span className="pcard-inner">
-          <span className="face front">{front}</span>
-          <span className="face back">{back}</span>
-        </span>
-      </button>
-    </div>
-  );
-}
-
-function ImgCard({ n, name, hook, big }) {
-  const [flipped, setFlipped] = useState(false);
-  const id = String(n).padStart(2, '0');
-  return (
-    <div className="imgcard-wrap">
-      <button
-        type="button"
-        className={`pcard img${flipped ? ' flipped' : ''}${big ? ' big' : ''}`}
-        onClick={() => setFlipped((f) => !f)}
-        aria-label={`${name}, card ${n}. Turn the card over`}
-      >
-        <span className="pcard-inner">
-          <span className="face front"><img src={`/cards/${id}-front.webp`} alt={`${name} card ${n}, front`} loading="lazy" /></span>
-          <span className="face back"><img src={`/cards/${id}-back.webp`} alt={`${name} card ${n}, back`} loading="lazy" /></span>
-        </span>
-      </button>
-      {hook && <span className="chook"><b>Hook:</b> {hook}</span>}
-    </div>
   );
 }
 

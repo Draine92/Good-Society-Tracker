@@ -11,7 +11,7 @@ function Boxes({ n }) {
   );
 }
 
-export default function CharacterCard({ c, tags, canEdit }) {
+export default function CharacterCard({ c, tags, canEdit, house = '', ties = [] }) {
   const ready = c.marks_left >= 3 || c.marks_right >= 3 || c.marks_left + c.marks_right >= 5;
   const pos = tags.filter((t) => t.kind === 'positive');
   const neg = tags.filter((t) => t.kind === 'negative');
@@ -20,6 +20,17 @@ export default function CharacterCard({ c, tags, canEdit }) {
       <h3>{c.name || c.display_name}</h3>
       <div className="meta">Played by {c.display_name}</div>
       {c.concept && <p>{c.concept}</p>}
+      {house && (
+        <p className="muted"><strong>House:</strong> {house}</p>
+      )}
+      {ties.length > 0 && (
+        <p className="muted">
+          <strong>Relationships:</strong>{' '}
+          {ties.map((t, i) => (
+            <span key={t.id}>{i ? '; ' : ''}{t.title} with {t.text.replace(' (you are the giver)', '').replace(' (they are the giver)', '')}</span>
+          ))}
+        </p>
+      )}
       {c.public_relationships && (
         <p className="muted">
           <strong>Ties:</strong> {c.public_relationships}

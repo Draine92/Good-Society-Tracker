@@ -3,6 +3,8 @@ import { q } from '@/lib/db';
 import { saveNpc, deleteNpc, adjustLeverage } from '../actions';
 import Flash from '@/components/Flash';
 import Pips from '@/components/Pips';
+import { CONNECTIONS } from '@/lib/deck-data';
+import { ConnectionFlip } from '@/components/CardViews';
 
 function NpcForm({ npc, targets }) {
   return (
@@ -16,6 +18,19 @@ function NpcForm({ npc, targets }) {
         {targets.map((t) => (
           <option key={t.id} value={t.id}>{t.name || t.display_name}</option>
         ))}
+      </select>
+      <label>Connection card (the card you drew for this NPC)</label>
+      <select name="card_n" defaultValue={npc?.card_n || 0}>
+        <option value="0">— none —</option>
+        {CONNECTIONS.map((c) => (
+          <option key={c.n} value={c.n}>#{c.n} {c.name}</option>
+        ))}
+      </select>
+      <label>Which side did you choose?</label>
+      <select name="card_side" defaultValue={npc?.card_side || ''}>
+        <option value="">— not chosen —</option>
+        <option value="a">Side A</option>
+        <option value="b">Side B</option>
       </select>
       <label>Relationship to them</label>
       <input type="text" name="relationship" defaultValue={npc?.relationship || ''} maxLength={120} placeholder="Sibling, rival, patron…" />
@@ -57,6 +72,11 @@ export default async function NpcsPage({ searchParams }) {
         <div className="meta">
           {n.relationship || 'Connection'} · written by {n.author}
         </div>
+        {n.card_n && CONNECTIONS.find((c) => c.n === n.card_n) && (
+          <div style={{ width: 200, margin: '6px 0' }}>
+            <ConnectionFlip conn={CONNECTIONS.find((c) => c.n === n.card_n)} only={n.card_side || undefined} startBack />
+          </div>
+        )}
         {n.opinion && <p><em>“{n.opinion}”</em></p>}
         {n.public_notes && <p>{n.public_notes}</p>}
         <div className="row">
