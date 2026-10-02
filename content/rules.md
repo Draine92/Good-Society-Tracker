@@ -2,7 +2,7 @@
 
 **Table:** 1 DM + 3 players. Each player has 1 PC and builds 2 NPCs (one tied to each of the other two PCs) and plays them.
 **Ratio:** about 90% D&D rules, about 10% Good Society. D&D handles combat, checks, spells and exploration. Good Society handles who the characters are, who they are tied to, and what society says about them.
-**Setting:** high fantasy with Regency-style politics: many noble houses and families of wealth and means. See the Deck for the reskinned desire, relationship and connection cards.
+**Setting:** Corvane, a high fantasy world with Regency-style politics: many noble houses and families of wealth and means. The Concord is the Oath and way of life every noble lives by. See the Deck for the reskinned desire, relationship and connection cards.
 **Campaign shape:** PCs start at **level 5** as established figures and level by **milestone** up to **level 20**. See section 12.
 **Assumptions (change any of these):** D&D 5e.
 
