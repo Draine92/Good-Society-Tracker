@@ -130,6 +130,18 @@ export async function createPlayer(fd) {
   redirect('/dm?ok=Player+created');
 }
 
+export async function removePlayer(fd) {
+  const dm = await requireDM();
+  const id = int(fd, 'user_id');
+  const rows = await q('select id, role, display_name from users where id = $1', [id]);
+  if (!rows.length) fail('/dm', 'That player no longer exists.');
+  if (rows[0].role !== 'player' || rows[0].id === dm.id) fail('/dm', 'Only player accounts can be removed.');
+  // Their character, tags and the NPCs they wrote go with them; their login stops working at once.
+  await q('delete from users where id = $1', [id]);
+  revalidatePath('/', 'layout');
+  redirect('/dm?ok=' + encodeURIComponent(`${rows[0].display_name} was removed`));
+}
+
 export async function resetPassword(fd) {
   await requireDM();
   const id = int(fd, 'user_id');

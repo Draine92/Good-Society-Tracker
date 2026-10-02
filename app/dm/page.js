@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { requireDM } from '@/lib/auth';
 import { q, getSetting, currentSession } from '@/lib/db';
-import { createPlayer, resetPassword, endSession, addLog, deleteLog, saveCollab } from '../actions';
+import { createPlayer, removePlayer, resetPassword, endSession, addLog, deleteLog, saveCollab } from '../actions';
 import Flash from '@/components/Flash';
 
 export default async function DMPage({ searchParams }) {
@@ -28,7 +28,7 @@ export default async function DMPage({ searchParams }) {
       <div className="card">
         <table>
           <thead>
-            <tr><th>Username</th><th>Display name</th><th>Role</th><th>Reset password</th></tr>
+            <tr><th>Username</th><th>Display name</th><th>Role</th><th>Reset password</th><th>Remove</th></tr>
           </thead>
           <tbody>
             {users.map((u) => (
@@ -42,6 +42,22 @@ export default async function DMPage({ searchParams }) {
                     <input type="password" name="password" placeholder="New password" minLength={8} style={{ width: 150 }} required />
                     <button className="ghost small">Set</button>
                   </form>
+                </td>
+                <td>
+                  {u.role === 'player' ? (
+                    <details>
+                      <summary>Remove…</summary>
+                      <form action={removePlayer} className="remove-confirm">
+                        <input type="hidden" name="user_id" value={u.id} />
+                        <p className="small-note">
+                          Permanently removes <strong>{u.display_name}</strong>, their character and the {npcs.filter((n) => n.author_id === u.id).length} NPC(s) they wrote. This cannot be undone.
+                        </p>
+                        <button className="small danger">Yes, remove {u.display_name}</button>
+                      </form>
+                    </details>
+                  ) : (
+                    <span className="muted">—</span>
+                  )}
                 </td>
               </tr>
             ))}

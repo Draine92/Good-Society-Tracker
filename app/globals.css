@@ -395,3 +395,6 @@ nav.book-toc { display: block; }
 .rc-shield svg { display: block; width: 100%; height: auto; }
 .rc-knot { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); color: #7d1f2b; display: block; }
 .rc-knot svg { width: 17cqw; height: auto; }
+
+.remove-confirm { margin-top: 6px; max-width: 260px; }
+button.danger { background: #8a1c1c; color: #fff; }
