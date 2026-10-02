@@ -15,14 +15,14 @@
   --radius: 10px;
 }
 :root[data-theme="dark"] {
-    --paper: #2b2113;
+    --paper: #3a2d1a;
     --tex-page: url('/parch-page-dark.jpg');
     --tex-panel: url('/parch-panel-dark.jpg');
-    --tex-note: url('/parch-note-dark.jpg'); --note-board: #54401f;
-    --paper-2: #3c2d19;
+    --tex-note: url('/parch-note-dark.jpg'); --note-board: #66502e;
+    --paper-2: #4d3b22;
     --ink: #f3e6d3;
     --ink-soft: #c2a98f;
-    --line: #6b4a2a;
+    --line: #7d5a33;
     --wine: #ee7d8c;
     --wine-soft: #3d1920;
     --gold: #e0b030;
@@ -32,14 +32,14 @@
   }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #2b2113;
+    --paper: #3a2d1a;
     --tex-page: url('/parch-page-dark.jpg');
     --tex-panel: url('/parch-panel-dark.jpg');
-    --tex-note: url('/parch-note-dark.jpg'); --note-board: #54401f;
-    --paper-2: #3c2d19;
+    --tex-note: url('/parch-note-dark.jpg'); --note-board: #66502e;
+    --paper-2: #4d3b22;
     --ink: #f3e6d3;
     --ink-soft: #c2a98f;
-    --line: #6b4a2a;
+    --line: #7d5a33;
     --wine: #ee7d8c;
     --wine-soft: #3d1920;
     --gold: #e0b030;
@@ -152,10 +152,10 @@ summary { cursor: pointer; font-weight: 600; color: var(--wine); }
   --note: #eddab0; --note-ink: #2a1a14; --note-soft: #5e4837; --note-line: #c9ab72;
 }
 :root[data-theme="dark"] { --velvet: #3d0a15; --velvet-2: #2e0710; --frame: #b88a14; --frame-2: #7a5a0c;
-    --note: #3a2b1b; --note-ink: #f3e6d3; --note-soft: #c2a98f; --note-line: #4a3326; }
+    --note: #4d3b24; --note-ink: #f3e6d3; --note-soft: #c2a98f; --note-line: #4a3326; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) { --velvet: #3d0a15; --velvet-2: #2e0710; --frame: #b88a14; --frame-2: #7a5a0c;
-    --note: #3a2b1b; --note-ink: #f3e6d3; --note-soft: #c2a98f; --note-line: #4a3326; }
+    --note: #4d3b24; --note-ink: #f3e6d3; --note-soft: #c2a98f; --note-line: #4a3326; }
 }
 .board {
   --k: .72; /* scale of the ornate frame */
