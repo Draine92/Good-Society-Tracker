@@ -5,6 +5,7 @@ import Flash from '@/components/Flash';
 import Pips from '@/components/Pips';
 import { MapThumb } from '@/components/MapViewer';
 import { SITE_NAME } from '@/lib/world';
+import CelticKnot from '@/components/CelticKnot';
 import { CHAPTERS } from '@/lib/rules-data';
 import { DESIRES, RELATIONSHIPS, CONNECTIONS } from '@/lib/deck-data';
 
@@ -45,7 +46,7 @@ export default async function NoticeBoard({ searchParams }) {
         <div className="board-layout">
         <Link href="/rules" className="book-obj" aria-label="Open the rules book">
           <span className="book-cover">
-            <span className="book-orn">❦</span>
+            <span className="book-orn"><CelticKnot size={46} gap="var(--crimson)" /></span>
             <span className="book-title">Rules of the Concord</span>
             <span className="book-orn small">· · ·</span>
           </span>

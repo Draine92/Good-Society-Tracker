@@ -67,7 +67,7 @@ main { max-width: 1060px; margin: 0 auto; padding: 1rem 16px 4rem; }
   display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; align-items: center; justify-content: space-between;
 }
 .brand { font-size: 1.4rem; color: var(--wine); }
-.crest { color: var(--gold); }
+.crest { color: var(--gold); display: inline-flex; vertical-align: -6px; margin-right: 2px; }
 nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1.1rem; align-items: center; }
 nav a { text-decoration: none; color: var(--ink); font-weight: 600; }
 nav a:hover { color: var(--wine); }

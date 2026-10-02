@@ -5,6 +5,7 @@ import { logout } from './actions';
 import AutoRefresh from '@/components/AutoRefresh';
 import ThemeToggle from '@/components/ThemeToggle';
 import { SITE_NAME } from '@/lib/world';
+import CelticKnot from '@/components/CelticKnot';
 import { currentSession } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -44,7 +45,7 @@ export default async function RootLayout({ children }) {
       <body>
         <header className="top">
           <div className="brand">
-            <span className="crest">❦</span> {SITE_NAME}
+            <span className="crest"><CelticKnot size={28} gap="var(--paper-2)" /></span> {SITE_NAME}
           </div>
           <div className="top-right">
           {user && (
