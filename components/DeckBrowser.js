@@ -30,6 +30,27 @@ function Card({ front, back, tone, orn, num, big }) {
   );
 }
 
+function ImgCard({ n, name, hook, big }) {
+  const [flipped, setFlipped] = useState(false);
+  const id = String(n).padStart(2, '0');
+  return (
+    <div className="imgcard-wrap">
+      <button
+        type="button"
+        className={`pcard img${flipped ? ' flipped' : ''}${big ? ' big' : ''}`}
+        onClick={() => setFlipped((f) => !f)}
+        aria-label={`${name}, card ${n}. Turn the card over`}
+      >
+        <span className="pcard-inner">
+          <span className="face front"><img src={`/cards/${id}-front.webp`} alt={`${name} card ${n}, front`} loading="lazy" /></span>
+          <span className="face back"><img src={`/cards/${id}-back.webp`} alt={`${name} card ${n}, back`} loading="lazy" /></span>
+        </span>
+      </button>
+      {hook && <span className="chook"><b>Hook:</b> {hook}</span>}
+    </div>
+  );
+}
+
 const TABS = [
   { id: 'desires', label: 'Desires', orn: '❦', tone: 'wine' },
   { id: 'relationships', label: 'Relationships', orn: '♥', tone: 'rose' },
@@ -45,41 +66,10 @@ export default function DeckBrowser({ desires, relationships, connections, famil
 
   const render = (item, big = false) => {
     if (tab === 'desires') {
-      return (
-        <Card
-          key={item.n} big={big} tone={meta.tone} orn={meta.orn} num={item.n}
-          front={
-            <>
-              <span className="kind">{item.kind}{item.age ? ' · Age' : ''}</span>
-              <strong className="ctitle">{item.title}</strong>
-              <span className="ctext">{item.text}</span>
-              {isDM && item.hook && <span className="chook"><b>Hook:</b> {item.hook}</span>}
-            </>
-          }
-        />
-      );
+      return <ImgCard key={item.n} n={item.n} name="Desire" big={big} hook={isDM ? item.hook : ''} />;
     }
     if (tab === 'relationships') {
-      const sameAsPublic = !item.private.title && /^same/i.test(item.private.text);
-      return (
-        <Card
-          key={item.n} big={big} tone={meta.tone} orn={meta.orn} num={item.n}
-          front={
-            <>
-              <span className="kind">Public</span>
-              <strong className="ctitle">{item.public.title}</strong>
-              <span className="ctext">{item.public.text}</span>
-            </>
-          }
-          back={
-            <>
-              <span className="kind">Private</span>
-              <strong className="ctitle">{sameAsPublic ? item.public.title : item.private.title || item.public.title}</strong>
-              <span className="ctext">{sameAsPublic ? `Same as the public side. ${item.private.text.replace(/^same\.?,?\s*/i, '')}` : item.private.text}</span>
-            </>
-          }
-        />
-      );
+      return <ImgCard key={item.n} n={item.n} name="Relationship" big={big} />;
     }
     if (tab === 'connections') {
       return (

@@ -13,7 +13,7 @@ export default async function DeckPage() {
     <>
       <h1>The Deck</h1>
       <p className="sub">
-        Desires, relationships, connections and Houses for building characters. Tap a card to turn it over.
+        Desires and relationships are the real Good Society cards; connections and Houses are reskinned for Corvane. Tap a card to turn it over.
       </p>
       <DeckBrowser desires={desires} relationships={RELATIONSHIPS} connections={CONNECTIONS} families={FAMILIES} isDM={isDM} />
     </>

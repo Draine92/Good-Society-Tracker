@@ -279,7 +279,8 @@ nav.book-toc { display: block; }
 .deck-tabs .draw { margin-left: auto; background: var(--gold); color: #fff; }
 :where(:root[data-theme="dark"]) .deck-tabs .draw { color: #1d1813; }
 @media (prefers-color-scheme: dark) { :where(:root:not([data-theme="light"])) .deck-tabs .draw { color: #1d1813; } }
-.deck-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); }
+.deck-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); justify-items: center; align-items: start; }
+.deck-grid > .pcard:not(.img) { justify-self: stretch; }
 .drawn { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 6px 0 24px; padding: 16px; border-radius: var(--radius); background: var(--paper-2); border: 1px dashed var(--gold); animation: dealt .35s ease; }
 @keyframes dealt { from { transform: translateY(-14px) rotate(-4deg); opacity: 0; } to { transform: none; opacity: 1; } }
 .pcard { --accent: var(--wine); perspective: 900px; display: block; width: 100%; aspect-ratio: 5 / 7; padding: 0; background: none; border: 0; border-radius: 12px; text-align: left; color: var(--note-ink); cursor: pointer; font: inherit; font-weight: 400; }
@@ -302,6 +303,12 @@ nav.book-toc { display: block; }
 .ctext { font-size: .9rem; line-height: 1.38; color: var(--note-ink); }
 .chook { font-size: .85rem; background: var(--gold-soft); border: 1px dashed var(--gold); border-radius: 6px; padding: 5px 8px; color: var(--note-ink); }
 .turnhint { position: absolute; bottom: 6px; left: 0; right: 0; text-align: center; font-size: .72rem; color: var(--note-soft); }
+/* Real printed cards (images cut from the PDF) */
+.imgcard-wrap { width: 100%; max-width: 300px; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+.pcard.img { aspect-ratio: 825 / 1425; max-width: 300px; }
+.pcard.img .face { padding: 0; border: 0; background: none; overflow: hidden; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,.3); }
+.pcard.img .face img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.imgcard-wrap .chook { width: 100%; max-width: 300px; }
 @media (prefers-reduced-motion: reduce) { .pcard-inner { transition: none; } .drawn { animation: none; } }
 
 /* ---------- Candle theme toggle ---------- */
