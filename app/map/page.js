@@ -1,14 +1,27 @@
 import { requireUser } from '@/lib/auth';
-import MapViewer from '@/components/MapViewer';
+import { getSetting } from '@/lib/db';
+import { loadHexes } from '@/lib/hexdb';
+import { DEFAULT_HEX_MILES } from '@/lib/hex';
+import HexMap from '@/components/HexMap';
 import { WORLD_NAME } from '@/lib/world';
 
+export const metadata = { title: 'Map' };
+
 export default async function MapPage() {
-  await requireUser();
+  const user = await requireUser();
+  const isDM = user.role === 'dm';
+  const [hexes, miles, party] = await Promise.all([
+    loadHexes(isDM),
+    getSetting('hex_miles', String(DEFAULT_HEX_MILES)),
+    getSetting('party_hex', ''),
+  ]);
   return (
     <>
       <h1>Map of {WORLD_NAME}</h1>
-      <p className="sub">The known world, as far as the table knows it.</p>
-      <MapViewer />
+      <p className="sub">
+        Name a place, claim a hex for your House, or measure a journey.
+      </p>
+      <HexMap initial={hexes} isDM={isDM} initialMiles={Number(miles) || DEFAULT_HEX_MILES} initialParty={party || null} />
     </>
   );
 }

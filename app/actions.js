@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import bcrypt from 'bcryptjs';
 import { q, getSetting, setSetting, currentSession } from '@/lib/db';
+import { TERRAIN, FEATURES, COLS, ROWS } from '@/lib/hex';
+import { seedHexes } from '@/lib/hexdb';
 import {
   createSession,
   destroySession,
@@ -474,4 +476,68 @@ export async function saveCollab(fd) {
   await setSetting('collab', str(fd, 'collab', 4000));
   revalidatePath('/', 'layout');
   redirect('/dm?ok=Saved');
+}
+
+
+/* ---------- Hex map ---------- */
+
+const inGrid = (c, r) => Number.isInteger(c) && Number.isInteger(r) && c >= 0 && r >= 0 && c < COLS && r < ROWS;
+
+// Anyone may name a hex, claim it for a House and write what is going on there.
+// Only the DM may change terrain, roads, features and the secret note.
+export async function saveHex(fd) {
+  const user = await requireUser();
+  const c = int(fd, 'c', -1), r = int(fd, 'r', -1);
+  if (!inGrid(c, r)) return { ok: false };
+  const name = str(fd, 'name', 60), house = str(fd, 'house', 60), notes = str(fd, 'notes', 1200);
+  if (user.role === 'dm') {
+    const terrain = TERRAIN[str(fd, 'terrain', 20)] ? str(fd, 'terrain', 20) : 'plains';
+    const feature = Object.hasOwn(FEATURES, str(fd, 'feature', 20)) ? str(fd, 'feature', 20) : '';
+    await q(
+      'update hexes set name=$3, house=$4, notes=$5, terrain=$6, feature=$7, road=$8, secret=$9 where c=$1 and r=$2',
+      [c, r, name, house, notes, terrain, feature, fd.get('road') === 'on', str(fd, 'secret', 1200)]
+    );
+  } else {
+    await q('update hexes set name=$3, house=$4, notes=$5 where c=$1 and r=$2', [c, r, name, house, notes]);
+  }
+  revalidatePath('/map');
+  revalidatePath('/');
+  return { ok: true };
+}
+
+export async function paintHex(c, r, terrain, road) {
+  await requireDM();
+  if (!inGrid(c, r) || !TERRAIN[terrain]) return { ok: false };
+  await q('update hexes set terrain=$3, road=$4 where c=$1 and r=$2', [c, r, terrain, Boolean(road)]);
+  revalidatePath('/map');
+  revalidatePath('/');
+  return { ok: true };
+}
+
+export async function setHexMiles(miles) {
+  await requireDM();
+  const n = clamp(Math.round(Number(miles)) || 6, 1, 100);
+  await setSetting('hex_miles', String(n));
+  revalidatePath('/map');
+  return { ok: true, miles: n };
+}
+
+export async function regenerateHexMap(seed) {
+  await requireDM();
+  const n = clamp(Math.floor(Number(seed)) || 1, 1, 999999);
+  await seedHexes(n, true);
+  revalidatePath('/map');
+  revalidatePath('/');
+  return { ok: true, seed: n };
+}
+
+// The DM moves the party's marker; everyone sees it. Pass nothing to take it off the map.
+export async function setPartyHex(c, r) {
+  await requireDM();
+  if (c == null) await setSetting('party_hex', '');
+  else if (inGrid(c, r)) await setSetting('party_hex', `${c},${r}`);
+  else return { ok: false };
+  revalidatePath('/map');
+  revalidatePath('/');
+  return { ok: true };
 }

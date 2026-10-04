@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { requireUser } from '@/lib/auth';
-import { q, currentSession } from '@/lib/db';
+import { q, currentSession, getSetting } from '@/lib/db';
 import Flash from '@/components/Flash';
 import Pips from '@/components/Pips';
-import { MapThumb } from '@/components/MapViewer';
+import HexThumb from '@/components/HexThumb';
+import { loadHexes } from '@/lib/hexdb';
 import { SITE_NAME } from '@/lib/world';
 import CelticKnot from '@/components/CelticKnot';
 import { DESIRES, RELATIONSHIPS, CONNECTIONS } from '@/lib/deck-data';
@@ -12,6 +13,9 @@ const clip = (s, n = 90) => (s && s.length > n ? s.slice(0, n - 1).trimEnd() + '
 
 export default async function NoticeBoard({ searchParams }) {
   const user = await requireUser();
+  const partyRaw = await getSetting('party_hex', '');
+  const party = partyRaw ? (([c, r]) => ({ c, r }))(partyRaw.split(',').map(Number)) : null;
+  const hexes = (await loadHexes(false)).map(({ c, r, terrain, feature }) => ({ c, r, terrain, feature }));
   const session = await currentSession();
 
   const characters = await q(
@@ -56,7 +60,7 @@ export default async function NoticeBoard({ searchParams }) {
           <Link href="/map" className="note map-note" aria-label="Open the world map">
             <span className="pin" />
             <h3>The Known World</h3>
-            <MapThumb />
+            <HexThumb hexes={hexes} party={party} />
             <span className="more">Open the full map →</span>
           </Link>
 
