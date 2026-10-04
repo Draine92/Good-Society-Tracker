@@ -6,7 +6,6 @@ import Pips from '@/components/Pips';
 import { MapThumb } from '@/components/MapViewer';
 import { SITE_NAME } from '@/lib/world';
 import CelticKnot from '@/components/CelticKnot';
-import { CHAPTERS } from '@/lib/rules-data';
 import { DESIRES, RELATIONSHIPS, CONNECTIONS } from '@/lib/deck-data';
 
 const clip = (s, n = 90) => (s && s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s || '');
@@ -50,7 +49,7 @@ export default async function NoticeBoard({ searchParams }) {
             <span className="book-title">Rules of the Concord</span>
             <span className="book-orn small">· · ·</span>
           </span>
-          <span className="obj-label">{CHAPTERS.length} chapters</span>
+          <span className="obj-label">Rules reference</span>
         </Link>
 
         <div className="board-grid">

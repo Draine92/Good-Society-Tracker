@@ -436,3 +436,11 @@ button.danger { background: #8a1c1c; color: #fff; }
 .thumb:hover, .thumb.on { border-color: var(--wine); }
 .dm-cards { margin: 10px 0; }
 @media (max-width: 860px) { .vis-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Player cheat sheet ---------- */
+.cheat { border: 10px solid var(--velvet-2); border-radius: 10px; box-shadow: 0 8px 20px rgba(0,0,0,.3); }
+.cheat-jump { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 4px; padding-bottom: 12px; border-bottom: 3px double var(--line); }
+.cheat-jump a { font-size: .85rem; font-weight: 600; text-decoration: none; padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); }
+.cheat-jump a:hover { background: var(--gold-soft); }
+.cheat-sec { margin-top: 1.2rem; scroll-margin-top: 70px; }
+.cheat-sec h2 { margin: 0 0 .3rem; font-size: 1.2rem; }
