@@ -576,3 +576,30 @@ export async function rerollWeather() {
   revalidatePath('/');
   return { ok: true, roll };
 }
+
+// ---- Calendar events (DM only) ----
+export async function saveEvent(fd) {
+  await requireDM();
+  const id = int(fd, 'id', 0);
+  const title = str(fd, 'title', 80);
+  if (!title) return;
+  const month = clamp(int(fd, 'month', 0), 0, 11), day = clamp(int(fd, 'day', 1), 1, 30);
+  const yearRaw = int(fd, 'year', 0);
+  const year = fd.get('every_year') === 'on' || !yearRaw ? null : clamp(yearRaw, 1, 99999);
+  const notes = str(fd, 'notes', 600);
+  const isPublic = fd.get('dm_only') !== 'on';
+  if (id) {
+    await q('update calendar_events set title=$2, month=$3, day=$4, year=$5, notes=$6, is_public=$7 where id=$1', [id, title, month, day, year, notes, isPublic]);
+  } else {
+    await q('insert into calendar_events (title, month, day, year, notes, is_public) values ($1,$2,$3,$4,$5,$6)', [title, month, day, year, notes, isPublic]);
+  }
+  revalidatePath('/calendar');
+  revalidatePath('/');
+}
+
+export async function deleteEvent(fd) {
+  await requireDM();
+  await q('delete from calendar_events where id = $1', [int(fd, 'id', 0)]);
+  revalidatePath('/calendar');
+  revalidatePath('/');
+}
