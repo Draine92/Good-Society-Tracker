@@ -4,7 +4,8 @@ import { q, currentSession, getSetting } from '@/lib/db';
 import Flash from '@/components/Flash';
 import Pips from '@/components/Pips';
 import HexThumb from '@/components/HexThumb';
-import { loadHexes } from '@/lib/hexdb';
+import { loadHexes, loadClock } from '@/lib/hexdb';
+import { shortDate, weekday } from '@/lib/calendar';
 import { SITE_NAME } from '@/lib/world';
 import CelticKnot from '@/components/CelticKnot';
 import { DESIRES, RELATIONSHIPS, CONNECTIONS } from '@/lib/deck-data';
@@ -13,6 +14,7 @@ const clip = (s, n = 90) => (s && s.length > n ? s.slice(0, n - 1).trimEnd() + '
 
 export default async function NoticeBoard({ searchParams }) {
   const user = await requireUser();
+  const { date: today } = await loadClock();
   const partyRaw = await getSetting('party_hex', '');
   const party = partyRaw ? (([c, r]) => ({ c, r }))(partyRaw.split(',').map(Number)) : null;
   const hexes = (await loadHexes(false)).map(({ c, r, terrain, feature }) => ({ c, r, terrain, feature }));
@@ -43,7 +45,7 @@ export default async function NoticeBoard({ searchParams }) {
       <div className="board">
         <div className="plank">
           <h1>{SITE_NAME}</h1>
-          <span>Notice Board · Session {session}</span>
+          <span>Notice Board · Session {session} · {weekday(today)}, {shortDate(today)}</span>
         </div>
 
         <div className="board-layout">

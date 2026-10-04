@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs';
 import { q, getSetting, setSetting, currentSession } from '@/lib/db';
 import { TERRAIN, FEATURES, COLS, ROWS } from '@/lib/hex';
 import { seedHexes } from '@/lib/hexdb';
+import { DEFAULT_DATE, parseDate, serializeDate, clampDate, addDays } from '@/lib/calendar';
 import {
   createSession,
   destroySession,
@@ -540,4 +541,43 @@ export async function setPartyHex(c, r) {
   revalidatePath('/map');
   revalidatePath('/');
   return { ok: true };
+}
+
+/* ---------- Calendar and weather (DM only) ---------- */
+
+async function readDate() {
+  return parseDate(await getSetting('cal_date', serializeDate(DEFAULT_DATE)));
+}
+function dateDone(date) {
+  revalidatePath('/calendar');
+  revalidatePath('/map');
+  revalidatePath('/');
+  return { ok: true, date };
+}
+
+export async function advanceDate(days) {
+  await requireDM();
+  const n = clamp(Math.round(Number(days)) || 0, -3600, 3600);
+  const date = addDays(await readDate(), n);
+  await setSetting('cal_date', serializeDate(date));
+  await setSetting('weather_roll', '0'); // a new day brings new skies
+  return dateDone(date);
+}
+
+export async function setDate(fd) {
+  await requireDM();
+  const date = clampDate({ year: int(fd, 'year', 312), month: int(fd, 'month', 0), day: int(fd, 'day', 1) });
+  await setSetting('cal_date', serializeDate(date));
+  await setSetting('weather_roll', '0');
+  return dateDone(date);
+}
+
+export async function rerollWeather() {
+  await requireDM();
+  const roll = (parseInt(await getSetting('weather_roll', '0'), 10) || 0) + 1;
+  await setSetting('weather_roll', String(roll));
+  revalidatePath('/calendar');
+  revalidatePath('/map');
+  revalidatePath('/');
+  return { ok: true, roll };
 }

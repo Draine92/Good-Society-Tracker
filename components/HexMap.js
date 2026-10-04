@@ -1,11 +1,12 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   COLS, ROWS, TERRAIN, TERRAIN_KEYS, FEATURES, PACES, ROAD_COST,
   center, corners, neighbors, distance, findRoute, key,
 } from '@/lib/hex';
-import { saveHex, paintHex, setHexMiles, regenerateHexMap, setPartyHex } from '@/app/actions';
+import { saveHex, paintHex, setHexMiles, regenerateHexMap, setPartyHex, advanceDate, rerollWeather } from '@/app/actions';
+import { weatherMap, formatDate, MONTHS } from '@/lib/calendar';
 
 const S = 28;
 const PAD = 20;
@@ -14,7 +15,7 @@ const H = Math.ceil(S * 1.5 * ROWS + S * 0.5) + PAD * 2;
 const label = (h) => h.name || h.house || '';
 const days = (cost, perDay) => Math.ceil((cost / perDay) * 2) / 2;
 
-export default function HexMap({ initial, isDM, initialMiles, initialParty }) {
+export default function HexMap({ initial, isDM, initialMiles, initialParty, initialDate, initialRoll }) {
   const [hexes, setHexes] = useState(() => new Map(initial.map((h) => [key(h.c, h.r), h])));
   const [miles, setMiles] = useState(initialMiles);
   const [party, setParty] = useState(() => {
@@ -28,6 +29,12 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty }) {
   const [brush, setBrush] = useState('plains');
   const [view, setView] = useState({ x: 0, y: 0, k: 1 });
   const [msg, setMsg] = useState('');
+  const [full, setFull] = useState(false);
+  const [showWx, setShowWx] = useState(true);
+  const [date, setDate] = useState(initialDate);
+  const [roll, setRoll] = useState(initialRoll || 0);
+  const wrapRef = useRef(null);
+  const stageRef = useRef(null);
   const drag = useRef(null);
   const moved = useRef(false);
   const painting = useRef(false);
@@ -43,7 +50,52 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty }) {
     () => (trip.a && trip.b ? findRoute(hexes, trip.a, trip.b) : null),
     [hexes, trip]
   );
+  const wx = useMemo(() => weatherMap(hexes.values(), date, roll), [hexes, date, roll]);
   const onRoute = useMemo(() => new Set((route?.path || []).map((p) => key(p.c, p.r))), [route]);
+
+  // The wheel only zooms in full screen (or with Ctrl/Cmd held), so normal page scrolling still works.
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    const onWheel = (e) => {
+      if (!full && !(e.ctrlKey || e.metaKey)) return;
+      e.preventDefault();
+      const rect = el.getBoundingClientRect();
+      const ratio = W / rect.width;
+      const ux = (e.clientX - rect.left) * ratio, uy = (e.clientY - rect.top) * ratio;
+      const f = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+      setView((v) => {
+        const k = Math.min(6, Math.max(0.6, v.k * f));
+        const cx = W / 2, cy = H / 2, g = k / v.k;
+        return { k, x: ux - cx - g * (ux - cx - v.x), y: uy - cy - g * (uy - cy - v.y) };
+      });
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, [full]);
+
+  useEffect(() => {
+    if (!full) return;
+    const onKey = (e) => { if (e.key === 'Escape') leaveFull(); };
+    const onFs = () => { if (!document.fullscreenElement) setFull(false); };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('fullscreenchange', onFs);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('fullscreenchange', onFs);
+      document.body.style.overflow = '';
+    };
+  }, [full]);
+
+  function enterFull() {
+    setFull(true);
+    wrapRef.current?.requestFullscreen?.().catch(() => {}); // falls back to the on-page overlay
+  }
+  function leaveFull() {
+    setFull(false);
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  }
 
   function paintAt(c, r) {
     const h = hexes.get(key(c, r));
@@ -94,6 +146,9 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty }) {
           >
             <polygon points={corners(c, r, S)} fill={t.fill} className="hx-poly" />
             {t.glyph && <text x={x} y={y - 3} className="hx-glyph">{t.glyph}</text>}
+            {showWx && h.terrain !== undefined && wx.get(key(c, r)) && (
+              <text x={x} y={y - 15} className="hx-wx">{wx.get(key(c, r)).glyph}</text>
+            )}
             {h.road && h.terrain !== 'sea' && (
               <g className="hx-road">
                 {neighbors(c, r).map(([nc, nr]) => {
@@ -117,7 +172,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty }) {
     }
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hexes, mode, isDM, brush]);
+  }, [hexes, mode, isDM, brush, showWx, wx]);
 
   const selHex = sel ? hexes.get(key(sel.c, sel.r)) : null;
   const pick = (p) => hexes.get(key(p.c, p.r));
@@ -140,13 +195,15 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty }) {
   function zoom(k) { setView((v) => ({ ...v, k: Math.min(5, Math.max(0.6, k)) })); }
 
   return (
-    <div className="hexmap">
+    <div className={`hexmap${full ? ' full' : ''}`} ref={wrapRef}>
       <div className="hexmap-main">
         <div className="deck-tabs">
           <button className={`tab ${mode === 'look' ? 'on' : ''}`} onClick={() => setMode('look')}>Look</button>
           <button className={`tab ${mode === 'travel' ? 'on' : ''}`} onClick={() => setMode('travel')}>Travel</button>
           {isDM && <button className={`tab ${mode === 'paint' ? 'on' : ''}`} onClick={() => setMode('paint')}>Paint terrain</button>}
+          <button className={`tab ${showWx ? 'on' : ''}`} onClick={() => setShowWx((v) => !v)}>Weather</button>
           <span className="hexmap-zoom">
+            <button className="ghost small" onClick={full ? leaveFull : enterFull}>{full ? 'Exit full screen' : 'Full screen'}</button>
             <button className="ghost small" onClick={() => zoom(view.k * 1.3)} aria-label="Zoom in">＋</button>
             <button className="ghost small" onClick={() => zoom(view.k / 1.3)} aria-label="Zoom out">−</button>
             <button className="ghost small" onClick={() => setView({ x: 0, y: 0, k: 1 })}>Reset</button>
@@ -154,8 +211,8 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty }) {
         </div>
 
         <div
+          ref={stageRef}
           className={`hexmap-stage ${mode === 'paint' ? 'painting' : ''}`}
-          onWheel={(e) => zoom(view.k * (e.deltaY < 0 ? 1.12 : 1 / 1.12))}
           onPointerDown={(e) => {
             moved.current = false;
             if (mode !== 'paint') drag.current = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y };
@@ -165,7 +222,10 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty }) {
             if (!d) return;
             const dx = e.clientX - d.x, dy = e.clientY - d.y;
             if (Math.abs(dx) + Math.abs(dy) > 5) moved.current = true;
-            if (moved.current) setView((v) => ({ ...v, x: d.vx + dx, y: d.vy + dy }));
+            if (moved.current) {
+              const ratio = W / stageRef.current.getBoundingClientRect().width;
+              setView((v) => ({ ...v, x: d.vx + dx * ratio, y: d.vy + dy * ratio }));
+            }
           }}
           onPointerUp={() => { drag.current = null; painting.current = false; }}
           onPointerLeave={() => { drag.current = null; painting.current = false; }}
@@ -206,7 +266,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty }) {
           </svg>
         </div>
         <p className="muted small-note">
-          Scroll to zoom, drag to move. Each hex is {miles} miles across.
+          {full ? 'Scroll to zoom, drag to move, Esc to leave full screen.' : 'Use ＋ and − to zoom (or hold Ctrl and scroll), drag to move.'} Each hex is {miles} miles across.
         </p>
         <ul className="hx-legend">
           {TERRAIN_KEYS.map((k) => (
@@ -218,12 +278,24 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty }) {
 
       <datalist id="hx-houses">{[...new Set([...hexes.values()].map((h) => h.house).filter(Boolean))].map((n) => <option key={n} value={n} />)}</datalist>
       <aside className="hexmap-side">
+        <div className="card date-card">
+          <h3>📅 {MONTHS[date.month].name}, Year {date.year}</h3>
+          <p>{formatDate(date)}</p>
+          {isDM && (
+            <p className="hx-inline">
+              <button className="small" onClick={async () => { const r = await advanceDate(1); if (r?.ok) { setDate(r.date); setRoll(0); } }}>+1 day</button>
+              <button className="small ghost" onClick={async () => { const r = await advanceDate(6); if (r?.ok) { setDate(r.date); setRoll(0); } }}>+6 days</button>
+              <button className="small ghost" onClick={async () => { const r = await rerollWeather(); if (r?.ok) setRoll(r.roll); }}>Re-roll weather</button>
+            </p>
+          )}
+        </div>
         <div className="card party-card">
           <h3>⚑ The party</h3>
           {party && hexes.get(key(party.c, party.r)) ? (
             <p>
               Currently at <b>{label(hexes.get(key(party.c, party.r))) || `${TERRAIN[hexes.get(key(party.c, party.r)).terrain].label} (${party.c + 1}, ${party.r + 1})`}</b>.{' '}
               <button className="ghost small" onClick={() => { setSel(party); setMode('look'); }}>Show hex</button>
+              {wx.get(key(party.c, party.r)) && <><br /><span className="muted">{wx.get(key(party.c, party.r)).glyph} {wx.get(key(party.c, party.r)).label}, {wx.get(key(party.c, party.r)).temperature.toLowerCase()}.</span></>}
             </p>
           ) : (
             <p className="muted">The party’s position hasn’t been marked yet.</p>
@@ -318,6 +390,12 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty }) {
                 Hex {sel.c + 1}, {sel.r + 1}
                 <span className="muted"> · {TERRAIN[selHex.terrain].label}{selHex.road ? ', road' : ''}</span>
               </h3>
+              {wx.get(key(sel.c, sel.r)) && (
+                <p className="hx-wx-line">
+                  <b>{wx.get(key(sel.c, sel.r)).glyph} {wx.get(key(sel.c, sel.r)).label}</b>, {wx.get(key(sel.c, sel.r)).temperature.toLowerCase()}.
+                  {wx.get(key(sel.c, sel.r)).note && <><br /><span className="muted">{wx.get(key(sel.c, sel.r)).note}</span></>}
+                </p>
+              )}
               <label>Place name<input name="name" maxLength={60} defaultValue={selHex.name} placeholder="Ashgrove Vale" /></label>
               <label>House from here<input name="house" list="hx-houses" maxLength={60} defaultValue={selHex.house} placeholder="House Ashgrove" /></label>
               <label>What’s going on here

@@ -1,6 +1,6 @@
 import { requireUser } from '@/lib/auth';
 import { getSetting } from '@/lib/db';
-import { loadHexes } from '@/lib/hexdb';
+import { loadHexes, loadClock } from '@/lib/hexdb';
 import { DEFAULT_HEX_MILES } from '@/lib/hex';
 import HexMap from '@/components/HexMap';
 import { WORLD_NAME } from '@/lib/world';
@@ -10,10 +10,11 @@ export const metadata = { title: 'Map' };
 export default async function MapPage() {
   const user = await requireUser();
   const isDM = user.role === 'dm';
-  const [hexes, miles, party] = await Promise.all([
+  const [hexes, miles, party, clock] = await Promise.all([
     loadHexes(isDM),
     getSetting('hex_miles', String(DEFAULT_HEX_MILES)),
     getSetting('party_hex', ''),
+    loadClock(),
   ]);
   return (
     <>
@@ -21,7 +22,7 @@ export default async function MapPage() {
       <p className="sub">
         Name a place, claim a hex for your House, or measure a journey.
       </p>
-      <HexMap initial={hexes} isDM={isDM} initialMiles={Number(miles) || DEFAULT_HEX_MILES} initialParty={party || null} />
+      <HexMap initial={hexes} isDM={isDM} initialMiles={Number(miles) || DEFAULT_HEX_MILES} initialParty={party || null} initialDate={clock.date} initialRoll={clock.roll} />
     </>
   );
 }
