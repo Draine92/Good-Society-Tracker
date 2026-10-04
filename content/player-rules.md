@@ -6,7 +6,6 @@
 - **Fights, checks, spells, exploring:** normal 5e.
 - **Your desire:** a secret card you must act on. Only the DM knows it unless you choose to share.
 - **Your relationships:** the ties you gave and took in the ring. You choose which are public and which private on your "My cards" page.
-- **Safety:** the X-card is always available. Anyone can stop a scene, no reason needed.
 
 ## 2. Inspiration
 You can hold **up to 3**.
@@ -66,7 +65,7 @@ Each time we level up:
 2. Earn or deepen one tag.
 3. Update inner conflict marks.
 4. Keep, replace or retire your desire.
-5. Quick tone and safety check-in.
+5. Quick tone check-in.
 6. Tidy the rumour board.
 
 **Act Breaks** (levels 8, 12, 16) are longer: you also replace or deepen your desire, may rewrite one tag, and may change an NPC. At level 20, you write an epilogue letter for your PC.

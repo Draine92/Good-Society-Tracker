@@ -152,7 +152,7 @@ export default async function DMPage({ searchParams }) {
       <div className="card">
         <form action={saveCollab}>
           <label>Shown on the public sheet</label>
-          <textarea name="collab" defaultValue={collab} maxLength={4000} style={{ minHeight: 140 }} placeholder="Tone: romantic comedy&#10;Lines: …&#10;Veils: …&#10;X-card: yes" />
+          <textarea name="collab" defaultValue={collab} maxLength={4000} style={{ minHeight: 140 }} placeholder="Tone: romantic comedy&#10;Lines: …&#10;Veils: …" />
           <p><button type="submit">Save</button></p>
         </form>
       </div>

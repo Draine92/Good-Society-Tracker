@@ -12,7 +12,6 @@
 Decide together, and write down the answers:
 - **Tone:** drama, romantic comedy or farce.
 - **Lines and veils:** content to avoid entirely, and content that happens off-screen.
-- **X-card:** anyone can stop a scene without giving a reason.
 - **Social vs. adventure balance:** roughly what mix of intrigue and dungeon/combat the group wants.
 - **Review:** revisit these answers at every milestone.
 Anything that breaks the agreement gets rewound and replayed.
