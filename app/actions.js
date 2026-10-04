@@ -523,13 +523,13 @@ export async function setHexMiles(miles) {
   return { ok: true, miles: n };
 }
 
-export async function regenerateHexMap(seed) {
+// Puts every hex back to the terrain drawn on the map picture. Names, Houses and notes are kept.
+export async function resetHexTerrain() {
   await requireDM();
-  const n = clamp(Math.floor(Number(seed)) || 1, 1, 999999);
-  await seedHexes(n, true);
+  await seedHexes(true);
   revalidatePath('/map');
   revalidatePath('/');
-  return { ok: true, seed: n };
+  return { ok: true };
 }
 
 // The DM moves the party's marker; everyone sees it. Pass nothing to take it off the map.

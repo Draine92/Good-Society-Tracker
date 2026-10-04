@@ -10,8 +10,9 @@ export const metadata = { title: 'Map' };
 export default async function MapPage() {
   const user = await requireUser();
   const isDM = user.role === 'dm';
-  const [hexes, miles, party, clock] = await Promise.all([
-    loadHexes(isDM),
+  // Load the hexes first: the very first load also resets the party marker for the new layout.
+  const hexes = await loadHexes(isDM);
+  const [miles, party, clock] = await Promise.all([
     getSetting('hex_miles', String(DEFAULT_HEX_MILES)),
     getSetting('party_hex', ''),
     loadClock(),

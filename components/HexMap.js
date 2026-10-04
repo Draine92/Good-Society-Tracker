@@ -2,16 +2,18 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  COLS, ROWS, TERRAIN, TERRAIN_KEYS, FEATURES, PACES, ROAD_COST,
+  COLS, ROWS, MAP_W, MAP_H, MAP_S, TERRAIN, TERRAIN_KEYS, FEATURES, PACES, ROAD_COST,
   center, corners, neighbors, distance, findRoute, key,
 } from '@/lib/hex';
-import { saveHex, paintHex, setHexMiles, regenerateHexMap, setPartyHex, advanceDate, rerollWeather } from '@/app/actions';
+import { saveHex, paintHex, setHexMiles, resetHexTerrain, setPartyHex, advanceDate, rerollWeather } from '@/app/actions';
+import { MAP_SRC, MAP_ALT } from '@/lib/world';
 import { weatherMap, formatDate, MONTHS } from '@/lib/calendar';
 
 const S = 28;
-const PAD = 20;
-const W = Math.ceil(S * Math.sqrt(3) * (COLS + 0.5)) + PAD * 2;
-const H = Math.ceil(S * 1.5 * ROWS + S * 0.5) + PAD * 2;
+// Hexes are built at radius S and scaled up to sit on the picture's own printed grid.
+const K = MAP_S / S;
+const W = MAP_W;
+const H = MAP_H;
 const label = (h) => h.name || h.house || '';
 const days = (cost, perDay) => Math.ceil((cost / perDay) * 2) / 2;
 
@@ -31,6 +33,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
   const [msg, setMsg] = useState('');
   const [full, setFull] = useState(false);
   const [showWx, setShowWx] = useState(true);
+  const [showTerrain, setShowTerrain] = useState(false);
   const [date, setDate] = useState(initialDate);
   const [roll, setRoll] = useState(initialRoll || 0);
   const wrapRef = useRef(null);
@@ -46,6 +49,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
       return n;
     });
 
+  const tint = showTerrain || mode === 'paint';
   const route = useMemo(
     () => (trip.a && trip.b ? findRoute(hexes, trip.a, trip.b) : null),
     [hexes, trip]
@@ -144,9 +148,9 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
               if (mode === 'paint' && isDM && painting.current) paintAt(c, r);
             }}
           >
-            <polygon points={corners(c, r, S)} fill={t.fill} className="hx-poly" />
-            {t.glyph && <text x={x} y={y - 3} className="hx-glyph">{t.glyph}</text>}
-            {showWx && h.terrain !== undefined && wx.get(key(c, r)) && (
+            <polygon points={corners(c, r, S)} fill={t.fill} fillOpacity={tint ? 0.5 : 0} className="hx-poly" />
+            {t.glyph && tint && <text x={x} y={y - 3} className="hx-glyph">{t.glyph}</text>}
+            {showWx && h.terrain !== 'sea' && wx.get(key(c, r)) && (
               <text x={x} y={y - 15} className="hx-wx">{wx.get(key(c, r)).glyph}</text>
             )}
             {h.road && h.terrain !== 'sea' && (
@@ -160,7 +164,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
                 <circle cx={x} cy={y} r="2.2" />
               </g>
             )}
-            {f?.glyph && <text x={x} y={y + 4} className={`hx-feat ${h.feature}`}>{f.glyph}</text>}
+            {f?.glyph && tint && <text x={x} y={y + 4} className={`hx-feat ${h.feature}`}>{f.glyph}</text>}
             {label(h) && (
               <text x={x} y={y + 15} className={h.house ? 'hx-label house' : 'hx-label'}>
                 {label(h).length > 14 ? label(h).slice(0, 13) + '…' : label(h)}
@@ -172,7 +176,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
     }
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hexes, mode, isDM, brush, showWx, wx]);
+  }, [hexes, mode, isDM, brush, showWx, wx, tint]);
 
   const selHex = sel ? hexes.get(key(sel.c, sel.r)) : null;
   const pick = (p) => hexes.get(key(p.c, p.r));
@@ -202,6 +206,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
           <button className={`tab ${mode === 'travel' ? 'on' : ''}`} onClick={() => setMode('travel')}>Travel</button>
           {isDM && <button className={`tab ${mode === 'paint' ? 'on' : ''}`} onClick={() => setMode('paint')}>Paint terrain</button>}
           <button className={`tab ${showWx ? 'on' : ''}`} onClick={() => setShowWx((v) => !v)}>Weather</button>
+          <button className={`tab ${tint ? 'on' : ''}`} onClick={() => setShowTerrain((v) => !v)} disabled={mode === 'paint'}>Terrain colours</button>
           <span className="hexmap-zoom">
             <button className="ghost small" onClick={full ? leaveFull : enterFull}>{full ? 'Exit full screen' : 'Full screen'}</button>
             <button className="ghost small" onClick={() => zoom(view.k * 1.3)} aria-label="Zoom in">＋</button>
@@ -232,7 +237,8 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
         >
           <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Hex map of Corvane">
             <g transform={`translate(${view.x} ${view.y}) scale(${view.k})`} style={{ transformOrigin: 'center' }}>
-              <g transform={`translate(${PAD + (S * Math.sqrt(3)) / 2} ${PAD + S})`}>
+              <image href={MAP_SRC} x="0" y="0" width={MAP_W} height={MAP_H} preserveAspectRatio="none" aria-label={MAP_ALT} />
+              <g transform={`scale(${K})`}>
                 {layer}
                 {route && (
                   <g className="hx-route" pointerEvents="none">
@@ -344,7 +350,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
         {mode === 'paint' && isDM && (
           <div className="card">
             <h3>Paint terrain</h3>
-            <p className="muted">Pick a brush, then click or drag across the map.</p>
+            <p className="muted">The terrain here is what travel uses. It started from the picture, so only repaint what you want to change. Pick a brush, then click or drag.</p>
             <div className="hx-brushes">
               {TERRAIN_KEYS.map((k) => (
                 <button key={k} className={`brush ${brush === k ? 'on' : ''}`} onClick={() => setBrush(k)}>
@@ -367,19 +373,16 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
               <label>Miles per hex <input type="number" name="miles" min="1" max="100" defaultValue={miles} /></label>
               <button className="small">Set</button>
             </form>
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                if (!confirm('Re-roll the whole map? Terrain, roads and features are replaced. Names, Houses and notes stay.')) return;
-                const seed = Number(new FormData(e.currentTarget).get('seed'));
-                const res = await regenerateHexMap(seed);
+            <button
+              className="small ghost"
+              onClick={async () => {
+                if (!confirm('Put every hex back to the terrain drawn on the map? Roads and your terrain edits are replaced. Names, Houses and notes stay.')) return;
+                const res = await resetHexTerrain();
                 if (res?.ok) window.location.reload();
               }}
-              className="hx-inline"
             >
-              <label>New map seed <input type="number" name="seed" min="1" max="999999" defaultValue={Math.floor(Math.random() * 9000) + 1000} /></label>
-              <button className="small ghost">Re-roll</button>
-            </form>
+              Reset terrain to the picture
+            </button>
           </div>
         )}
 

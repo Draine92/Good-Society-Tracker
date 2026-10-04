@@ -449,11 +449,11 @@ button.danger { background: #8a1c1c; color: #fff; }
 .hexmap { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 18px; align-items: start; }
 @media (max-width: 900px) { .hexmap { grid-template-columns: 1fr; } }
 .hexmap-zoom { margin-left: auto; display: flex; gap: 6px; }
-.hexmap-stage { overflow: hidden; border: 8px solid var(--velvet-2); border-radius: 10px; background: #b7cdcb; cursor: grab; touch-action: none; user-select: none; box-shadow: 0 6px 16px rgba(0,0,0,.3); }
+.hexmap-stage { overflow: hidden; border: 8px solid var(--velvet-2); border-radius: 10px; background: #6f8f74; cursor: grab; touch-action: none; user-select: none; box-shadow: 0 6px 16px rgba(0,0,0,.3); }
 .hexmap-stage.painting { cursor: crosshair; }
 .hexmap-stage svg { display: block; width: 100%; height: auto; }
 .hx { cursor: pointer; }
-.hx-poly { stroke: rgba(60,40,20,.35); stroke-width: .8; }
+.hx-poly { stroke: transparent; stroke-width: .8; }
 .hx:hover .hx-poly { stroke: var(--wine); stroke-width: 1.6; }
 .hx-glyph { text-anchor: middle; font-size: 13px; fill: rgba(40,30,20,.55); pointer-events: none; }
 .hx-feat { text-anchor: middle; font-size: 13px; fill: #5a1020; pointer-events: none; }
@@ -480,7 +480,7 @@ i.road { background: repeating-linear-gradient(90deg, #6b4a2a 0 4px, transparent
 .brush { font-size: .85rem; padding: 4px 9px; background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 999px; }
 .brush.on { background: var(--wine); color: #fff; border-color: var(--wine); }
 .hx-pace { width: 100%; font-size: .92rem; }
-.hex-thumb { background: #b7cdcb; }
+.hex-thumb { background: #6f8f74; }
 .hx-party path { fill: #8a1a2e; stroke: #fff; stroke-width: 1.5; stroke-linejoin: round; }
 .hx-party circle { fill: #3a2a1a; stroke: #fff; stroke-width: 1; }
 .party-card h3 { margin-top: 0; }
@@ -515,3 +515,7 @@ i.road { background: repeating-linear-gradient(90deg, #6b4a2a 0 4px, transparent
 .cal-set label { flex: 1; min-width: 70px; font-weight: 600; }
 .plank span { white-space: normal; }
 .cal-set label:nth-child(2) { flex-basis: 100%; order: -1; }
+
+.hx-label { font-size: 9px; }
+.hexmap-main .tab:disabled { opacity: .55; cursor: default; }
+.hex-thumb { max-height: none; height: auto; width: 100%; }
