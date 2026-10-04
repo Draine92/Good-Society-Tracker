@@ -484,23 +484,18 @@ export async function saveCollab(fd) {
 
 const inGrid = (c, r) => Number.isInteger(c) && Number.isInteger(r) && c >= 0 && r >= 0 && c < COLS && r < ROWS;
 
-// Anyone may name a hex, claim it for a House and write what is going on there.
-// Only the DM may change terrain, roads, features and the secret note.
+// Only the DM edits the map. Players view it, and the DM updates it with them.
 export async function saveHex(fd) {
-  const user = await requireUser();
+  await requireDM();
   const c = int(fd, 'c', -1), r = int(fd, 'r', -1);
   if (!inGrid(c, r)) return { ok: false };
   const name = str(fd, 'name', 60), house = str(fd, 'house', 60), notes = str(fd, 'notes', 1200);
-  if (user.role === 'dm') {
-    const terrain = TERRAIN[str(fd, 'terrain', 20)] ? str(fd, 'terrain', 20) : 'plains';
-    const feature = Object.hasOwn(FEATURES, str(fd, 'feature', 20)) ? str(fd, 'feature', 20) : '';
-    await q(
-      'update hexes set name=$3, house=$4, notes=$5, terrain=$6, feature=$7, road=$8, secret=$9 where c=$1 and r=$2',
-      [c, r, name, house, notes, terrain, feature, fd.get('road') === 'on', str(fd, 'secret', 1200)]
-    );
-  } else {
-    await q('update hexes set name=$3, house=$4, notes=$5 where c=$1 and r=$2', [c, r, name, house, notes]);
-  }
+  const terrain = TERRAIN[str(fd, 'terrain', 20)] ? str(fd, 'terrain', 20) : 'plains';
+  const feature = Object.hasOwn(FEATURES, str(fd, 'feature', 20)) ? str(fd, 'feature', 20) : '';
+  await q(
+    'update hexes set name=$3, house=$4, notes=$5, terrain=$6, feature=$7, road=$8, secret=$9 where c=$1 and r=$2',
+    [c, r, name, house, notes, terrain, feature, fd.get('road') === 'on', str(fd, 'secret', 1200)]
+  );
   revalidatePath('/map');
   revalidatePath('/');
   return { ok: true };

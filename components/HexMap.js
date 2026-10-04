@@ -387,7 +387,22 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
         )}
 
         <div className="card">
-          {selHex ? (
+          {selHex && !isDM ? (
+            <div key={`${sel.c},${sel.r}`}>
+              <h3>
+                {selHex.name || selHex.house || `Hex ${sel.c + 1}, ${sel.r + 1}`}
+                <span className="muted"> · {TERRAIN[selHex.terrain].label}{selHex.road ? ', road' : ''}</span>
+              </h3>
+              {wx.get(key(sel.c, sel.r)) && (
+                <p className="hx-wx-line">
+                  <b>{wx.get(key(sel.c, sel.r)).glyph} {wx.get(key(sel.c, sel.r)).label}</b>, {wx.get(key(sel.c, sel.r)).temperature.toLowerCase()}.
+                  {wx.get(key(sel.c, sel.r)).note && <><br /><span className="muted">{wx.get(key(sel.c, sel.r)).note}</span></>}
+                </p>
+              )}
+              {selHex.house && <p><b>House:</b> {selHex.house}</p>}
+              {selHex.notes ? <p>{selHex.notes}</p> : <p className="muted">Nothing is written about this place yet. Your DM will add it as your stories grow.</p>}
+            </div>
+          ) : selHex ? (
             <form key={`${sel.c},${sel.r}`} onSubmit={onSave}>
               <h3>
                 Hex {sel.c + 1}, {sel.r + 1}
@@ -428,7 +443,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
               <button>Save hex</button> <span className="muted">{msg}</span>
             </form>
           ) : (
-            <p className="muted">Click a hex to name it, claim it for a House, or note what’s happening there.</p>
+            <p className="muted">{isDM ? 'Click a hex to name it, claim it for a House, or note what’s happening there.' : 'Click a hex to see what is known about it.'}</p>
           )}
         </div>
       </aside>

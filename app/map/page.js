@@ -21,7 +21,7 @@ export default async function MapPage() {
     <>
       <h1>Map of {WORLD_NAME}</h1>
       <p className="sub">
-        Name a place, claim a hex for your House, or measure a journey.
+        {isDM ? 'Name places, mark Houses, move the party and measure journeys.' : 'Look around Corvane, see where the party is and measure a journey.'}
       </p>
       <HexMap initial={hexes} isDM={isDM} initialMiles={Number(miles) || DEFAULT_HEX_MILES} initialParty={party || null} initialDate={clock.date} initialRoll={clock.roll} />
     </>
