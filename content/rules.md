@@ -11,10 +11,8 @@
 ## 1. Session Zero (from Collaboration)
 Decide together, and write down the answers:
 - **Tone:** drama, romantic comedy or farce.
-- **Lines and veils:** content to avoid entirely, and content that happens off-screen.
 - **Social vs. adventure balance:** roughly what mix of intrigue and dungeon/combat the group wants.
 - **Review:** revisit these answers at every milestone.
-Anything that breaks the agreement gets rewound and replayed.
 
 ## 2. Character Creation
 1. **Desire.** Each player picks a secret desire card (#1-22). Players must act on it. DM can read all desires; other players cannot (unless the table chooses otherwise).
@@ -43,7 +41,6 @@ Anything that breaks the agreement gets rewound and replayed.
 2. **No self-dealing:** an NPC can't directly advance its author's own PC's desire without spending 1 Leverage.
 3. **Consent for harm:** if an NPC does something harmful to its target PC and it matters to the story, the author spends Leverage and offers it to the target's player. The target can accept, accept with a condition ("yes, but only if..."), or refuse. If accepted, the target PC gains 1 Inspiration.
 4. **Same scene:** if an author's PC and NPC are in the same scene, DM plays one of them. The author still decides how the NPC behaves.
-5. **DM veto:** DM can ask for a rewrite if an NPC conflicts with the tone agreed in session zero.
 
 ## 4. Inspiration (replaces Resolve tokens)
 - **Cap:** 3 per player.
@@ -137,9 +134,8 @@ Each time the party levels up (about 5-10 minutes):
 2. Earn or deepen one tag (section 5).
 3. Update inner conflict marks.
 4. Keep, replace or retire your desire.
-5. Review session zero.
-6. Clean up the rumour board.
-7. Top up empty NPC Leverage if you choose.
+5. Clean up the rumour board.
+6. Top up empty NPC Leverage if you choose.
 
 ## 11. Concord Etiquette (social magic)
 At level 5 and above, spells such as *zone of truth*, *detect thoughts*, *charm person*, *scrying* and *clairvoyance* can break intrigue. Setting rule:
