@@ -190,11 +190,11 @@ export default async function NoticeBoard({ searchParams }) {
             <span className="more">See everyone →</span>
           </Link>
 
-          <a href={DDB_URL} target="_blank" rel="noopener noreferrer" className="note tilt-r2" aria-label="Join the campaign on D&D Beyond">
+          <a href={DDB_URL} target="_blank" rel="noopener noreferrer" className="note tilt-r2" aria-label="Open the campaign on D&D Beyond">
             <span className="pin" />
             <h3>The Campaign</h3>
-            <p className="muted">Characters, sheets and dice live on D&amp;D Beyond. Use the invite link to join our table.</p>
-            <span className="more">Join on D&amp;D Beyond ↗</span>
+            <p className="muted">Characters, sheets and dice live on D&amp;D Beyond. Open our campaign page to find your character and the table.</p>
+            <span className="more">Open on D&amp;D Beyond ↗</span>
           </a>
 
           <Link href="/court#story" className="note tilt-r2" aria-label="Open the story so far">
