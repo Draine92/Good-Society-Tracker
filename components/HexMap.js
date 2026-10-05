@@ -42,12 +42,21 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
   const [showWx, setShowWx] = useState(true);
   const [showTerrain, setShowTerrain] = useState(false);
   const [showRoads, setShowRoads] = useState(true);
+  const [showNames, setShowNames] = useState(true);
+  const [unit, setUnit] = useState(10); // picture units per screen pixel, so place names stay the same size on screen
   const [legendOpen, setLegendOpen] = useState(true);
   useEffect(() => { if (window.innerWidth < 761) setLegendOpen(false); }, []);
   const [date, setDate] = useState(initialDate);
   const [roll, setRoll] = useState(initialRoll || 0);
   const wrapRef = useRef(null);
   const stageRef = useRef(null);
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(() => setUnit(W / Math.max(200, el.getBoundingClientRect().width)));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   const drag = useRef(null);
   const pts = useRef(new Map());
   const pinch = useRef(null);
@@ -178,11 +187,6 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
               </g>
             )}
             {f?.glyph && tint && <text x={x} y={y + 4} className={`hx-feat ${h.feature}`}>{f.glyph}</text>}
-            {label(h) && (
-              <text x={x} y={y + 15} className={h.house ? 'hx-label house' : 'hx-label'}>
-                {label(h).length > 14 ? label(h).slice(0, 13) + '…' : label(h)}
-              </text>
-            )}
           </g>
         );
       }
@@ -190,6 +194,15 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hexes, mode, isDM, brush, showWx, wx, tint, roadsOn]);
+
+  // Named places, most important first. Towns always show; smaller places appear once you zoom in.
+  const places = useMemo(() => {
+    const rank = { capital: 0, city: 1 };
+    return [...hexes.values()]
+      .filter((h) => label(h) && h.terrain !== 'sea')
+      .map((h) => ({ h, tier: rank[h.feature] ?? 2, ...center(h.c, h.r, MAP_S) }))
+      .sort((a, b) => a.tier - b.tier);
+  }, [hexes]);
 
   const selHex = sel ? hexes.get(key(sel.c, sel.r)) : null;
   const pick = (p) => hexes.get(key(p.c, p.r));
@@ -232,6 +245,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
           <button className={`tab ${mode === 'travel' ? 'on' : ''}`} onClick={() => setMode('travel')}>Travel</button>
           {isDM && <button className={`tab ${mode === 'paint' ? 'on' : ''}`} onClick={() => setMode('paint')}>Paint terrain</button>}
           <button className={`tab ${showWx ? 'on' : ''}`} onClick={() => setShowWx((v) => !v)}>Weather</button>
+          <button className={`tab ${showNames ? 'on' : ''}`} onClick={() => setShowNames((v) => !v)}>Names</button>
           <button className={`tab ${roadsOn ? 'on' : ''}`} onClick={() => setShowRoads((v) => !v)} disabled={mode === 'paint'}>Roads</button>
           <button className={`tab ${tint ? 'on' : ''}`} onClick={() => setShowTerrain((v) => !v)} disabled={mode === 'paint'}>Terrain colours</button>
           <span className="hexmap-zoom">
@@ -315,6 +329,25 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
                 })()}
                 {sel && <polygon points={corners(sel.c, sel.r, S)} className="hx-sel" pointerEvents="none" />}
               </g>
+              {showNames && (
+                <g pointerEvents="none" className="hx-names">
+                  {places.filter((p) => p.tier < 2 || view.k >= 1.8).map(({ h, tier, x, y }) => {
+                    const fs = ((tier === 0 ? 14 : tier === 1 ? 12 : 11) * (unit > 7.5 ? 0.8 : 1) * unit) / view.k; // a touch smaller on phones
+                    const t = label(h);
+                    return (
+                      <text
+                        key={`${h.c},${h.r}`}
+                        x={x}
+                        y={y + MAP_S * 0.95 + fs * 0.2}
+                        className={`hx-name t${tier}${h.name ? '' : ' house'}`}
+                        style={{ fontSize: fs, strokeWidth: fs * 0.28 }}
+                      >
+                        {t}
+                      </text>
+                    );
+                  })}
+                </g>
+              )}
             </g>
           </svg>
         </div>

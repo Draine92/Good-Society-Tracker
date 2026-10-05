@@ -607,3 +607,10 @@ button, a, summary, select, input { touch-action: manipulation; }
 .nb-day { font-family: 'Cinzel', serif; font-size: 2.3rem; font-weight: 700; color: var(--wine); min-width: 2.4ch; text-align: center; }
 .nb-glyph { font-size: 2.3rem; line-height: 1; min-width: 2.4ch; text-align: center; }
 .nb-today { margin: 0 0 6px; font-weight: 600; color: var(--wine); }
+
+/* ---------- Place names on the map ---------- */
+.hx-name { text-anchor: middle; font-family: var(--font-head), 'Cinzel', serif; font-weight: 700; letter-spacing: .04em;
+  fill: #2b1a10; paint-order: stroke; stroke: rgba(250,238,208,.95); stroke-linejoin: round; }
+.hx-name.t0 { fill: #6e0f22; text-transform: uppercase; letter-spacing: .1em; }
+.hx-name.t2 { font-weight: 600; font-style: italic; }
+.hx-name.house { fill: #7a1226; font-style: italic; }
