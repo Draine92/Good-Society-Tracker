@@ -5,7 +5,8 @@ import Flash from '@/components/Flash';
 import Pips from '@/components/Pips';
 import HexThumb from '@/components/HexThumb';
 import { loadClock, loadHexes } from '@/lib/hexdb';
-import { shortDate, weekday } from '@/lib/calendar';
+import { shortDate, weekday, MONTHS, ERA, weatherMap } from '@/lib/calendar';
+import { loadEvents, eventsOn, upcoming } from '@/lib/events';
 import { SITE_NAME } from '@/lib/world';
 import CelticKnot from '@/components/CelticKnot';
 import { DESIRES, RELATIONSHIPS, CONNECTIONS } from '@/lib/deck-data';
@@ -14,11 +15,18 @@ const clip = (s, n = 90) => (s && s.length > n ? s.slice(0, n - 1).trimEnd() + '
 
 export default async function NoticeBoard({ searchParams }) {
   const user = await requireUser();
-  const { date: today } = await loadClock();
-  await loadHexes(false); // makes sure the map layout is current before reading the party marker
+  const { date: today, roll } = await loadClock();
+  const hexes = await loadHexes(false); // also makes sure the map layout is current before reading the party marker
   const partyRaw = await getSetting('party_hex', '');
   const party = partyRaw ? (([c, r]) => ({ c, r }))(partyRaw.split(',').map(Number)) : null;
   const session = await currentSession();
+
+  const events = await loadEvents(user.role === 'dm');
+  const todays = eventsOn(events, today.year, today.month, today.day);
+  const soon = upcoming(events, today, 5).filter((e) => e.inDays > 0).slice(0, 3);
+  const partyHex = party && hexes.find((h) => h.c === party.c && h.r === party.r);
+  const wx = partyHex ? weatherMap([partyHex], today, roll).get(`${party.c},${party.r}`) : null;
+  const wxWhere = partyHex ? partyHex.name || partyHex.house || `hex ${party.c + 1}, ${party.r + 1}` : '';
 
   const characters = await q(
     `select c.id, c.name, c.concept, c.inspiration, c.monologue_used, c.marks_left, c.marks_right, u.display_name
@@ -66,7 +74,59 @@ export default async function NoticeBoard({ searchParams }) {
             <span className="more">Open the full map →</span>
           </Link>
 
-          <Link href="/rumours" className="note tilt-l" aria-label="Open the rumour board">
+          <Link href="/calendar" className="note tilt-l" aria-label="Open the calendar">
+            <span className="pin" />
+            <h3>The Calendar</h3>
+            <p className="nb-date">
+              <span className="nb-day">{today.day}</span>
+              <span>
+                <b>{MONTHS[today.month].name}</b>
+                <br />
+                <span className="muted">{weekday(today)} · {MONTHS[today.month].season} · Year {today.year} {ERA}</span>
+              </span>
+            </p>
+            {todays.length > 0 && (
+              <p className="nb-today">{todays.map((e) => e.title).join(' · ')} <span className="muted">today</span></p>
+            )}
+            {soon.length > 0 ? (
+              <ul className="mini">
+                {soon.map((e) => (
+                  <li key={`${e.id}-${e.inDays}`}>
+                    <strong>{e.title}</strong>
+                    <span className="muted"> · {e.inDays === 1 ? 'tomorrow' : `in ${e.inDays} days`}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : todays.length === 0 ? (
+              <p className="muted">Nothing is marked in the coming days.</p>
+            ) : null}
+            <span className="more">Open the calendar →</span>
+          </Link>
+
+          <Link href="/map" className="note tilt-r" aria-label="Open the map for the weather">
+            <span className="pin" />
+            <h3>Weather Report</h3>
+            {wx ? (
+              <>
+                <p className="nb-wx">
+                  <span className="nb-glyph" aria-hidden="true">{wx.glyph}</span>
+                  <span>
+                    <b>{wx.label}</b>
+                    <br />
+                    <span className="muted">{wx.temperature} · near {wxWhere}</span>
+                  </span>
+                </p>
+                {wx.note && <p className="muted">{wx.note}</p>}
+              </>
+            ) : (
+              <p className="muted">
+                {party ? 'The party is beyond the edge of the charted lands, so there is no report.' : 'No report yet: the party has not been placed on the map.'}
+              </p>
+            )}
+            <span className="more">Weather across the map →</span>
+          </Link>
+
+          <Link href="/rumours" className="note tilt-l2" aria-label="Open the rumour board">
             <span className="pin" />
             <h3>Rumour Board</h3>
             <p className="tally">

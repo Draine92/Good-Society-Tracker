@@ -601,3 +601,9 @@ button, a, summary, select, input { touch-action: manipulation; }
 .hx-legend-wrap .hx-legend { margin-top: 4px; }
 
 .hexmap-main, .hexmap-side, .cal-side { min-width: 0; }
+
+/* ---------- Notice board: calendar and weather notes ---------- */
+.nb-date, .nb-wx { display: flex; align-items: center; gap: 12px; margin: 0 0 8px; line-height: 1.3; }
+.nb-day { font-family: 'Cinzel', serif; font-size: 2.3rem; font-weight: 700; color: var(--wine); min-width: 2.4ch; text-align: center; }
+.nb-glyph { font-size: 2.3rem; line-height: 1; min-width: 2.4ch; text-align: center; }
+.nb-today { margin: 0 0 6px; font-weight: 600; color: var(--wine); }
