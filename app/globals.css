@@ -460,6 +460,7 @@ button.danger { background: #8a1c1c; color: #fff; }
 .hx-feat.capital { font-size: 18px; fill: #8a1a2e; }
 .hx-label { text-anchor: middle; font-size: 7.5px; font-family: var(--font-head); fill: #2b2118; pointer-events: none; paint-order: stroke; stroke: rgba(255,248,230,.85); stroke-width: 2px; }
 .hx-label.house { fill: #7a1226; font-weight: 700; }
+.hx-road { opacity: .3; }
 .hx-road line { stroke: #6b4a2a; stroke-width: 2.4; stroke-dasharray: 4 2.5; stroke-linecap: round; }
 .hx-road circle { fill: #6b4a2a; }
 .hx-sel { fill: none; stroke: #8a1a2e; stroke-width: 3; }

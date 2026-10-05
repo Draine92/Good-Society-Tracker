@@ -34,6 +34,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
   const [full, setFull] = useState(false);
   const [showWx, setShowWx] = useState(true);
   const [showTerrain, setShowTerrain] = useState(false);
+  const [showRoads, setShowRoads] = useState(true);
   const [date, setDate] = useState(initialDate);
   const [roll, setRoll] = useState(initialRoll || 0);
   const wrapRef = useRef(null);
@@ -50,6 +51,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
     });
 
   const tint = showTerrain || mode === 'paint';
+  const roadsOn = showRoads || mode === 'paint'; // the DM always sees roads while painting
   const route = useMemo(
     () => (trip.a && trip.b ? findRoute(hexes, trip.a, trip.b) : null),
     [hexes, trip]
@@ -153,7 +155,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
             {showWx && h.terrain !== 'sea' && wx.get(key(c, r)) && (
               <text x={x} y={y - 15} className="hx-wx">{wx.get(key(c, r)).glyph}</text>
             )}
-            {h.road && h.terrain !== 'sea' && (
+            {roadsOn && h.road && h.terrain !== 'sea' && (
               <g className="hx-road">
                 {neighbors(c, r).map(([nc, nr]) => {
                   const o = hexes.get(key(nc, nr));
@@ -176,7 +178,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
     }
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hexes, mode, isDM, brush, showWx, wx, tint]);
+  }, [hexes, mode, isDM, brush, showWx, wx, tint, roadsOn]);
 
   const selHex = sel ? hexes.get(key(sel.c, sel.r)) : null;
   const pick = (p) => hexes.get(key(p.c, p.r));
@@ -206,6 +208,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
           <button className={`tab ${mode === 'travel' ? 'on' : ''}`} onClick={() => setMode('travel')}>Travel</button>
           {isDM && <button className={`tab ${mode === 'paint' ? 'on' : ''}`} onClick={() => setMode('paint')}>Paint terrain</button>}
           <button className={`tab ${showWx ? 'on' : ''}`} onClick={() => setShowWx((v) => !v)}>Weather</button>
+          <button className={`tab ${roadsOn ? 'on' : ''}`} onClick={() => setShowRoads((v) => !v)} disabled={mode === 'paint'}>Roads</button>
           <button className={`tab ${tint ? 'on' : ''}`} onClick={() => setShowTerrain((v) => !v)} disabled={mode === 'paint'}>Terrain colours</button>
           <span className="hexmap-zoom">
             <button className="ghost small" onClick={full ? leaveFull : enterFull}>{full ? 'Exit full screen' : 'Full screen'}</button>
