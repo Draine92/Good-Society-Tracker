@@ -42,11 +42,15 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
   const [showWx, setShowWx] = useState(true);
   const [showTerrain, setShowTerrain] = useState(false);
   const [showRoads, setShowRoads] = useState(true);
+  const [legendOpen, setLegendOpen] = useState(true);
+  useEffect(() => { if (window.innerWidth < 761) setLegendOpen(false); }, []);
   const [date, setDate] = useState(initialDate);
   const [roll, setRoll] = useState(initialRoll || 0);
   const wrapRef = useRef(null);
   const stageRef = useRef(null);
   const drag = useRef(null);
+  const pts = useRef(new Map());
+  const pinch = useRef(null);
   const moved = useRef(false);
   const painting = useRef(false);
 
@@ -205,6 +209,13 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
     } else setMsg('Could not save.');
   }
 
+  function endPointer(e) {
+    pts.current.delete(e.pointerId);
+    if (pts.current.size < 2) pinch.current = null;
+    drag.current = null;
+    painting.current = false;
+  }
+
   function zoom(k) {
     // zoom about the middle of the frame, then settle back inside the map
     setView((v) => {
@@ -235,21 +246,41 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
           ref={stageRef}
           className={`hexmap-stage ${mode === 'paint' ? 'painting' : ''}`}
           onPointerDown={(e) => {
+            pts.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+            if (pts.current.size === 2) {
+              // two fingers: pinch to zoom and drag to pan together
+              const [a, b] = [...pts.current.values()];
+              pinch.current = { d: Math.hypot(a.x - b.x, a.y - b.y) || 1, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2, v: view };
+              drag.current = null;
+              moved.current = true;
+              return;
+            }
             moved.current = false;
             if (mode !== 'paint') drag.current = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y };
           }}
           onPointerMove={(e) => {
+            if (pts.current.has(e.pointerId)) pts.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+            const rect = stageRef.current.getBoundingClientRect();
+            const ratio = W / rect.width;
+            if (pinch.current && pts.current.size === 2) {
+              const [a, b] = [...pts.current.values()];
+              const q = pinch.current, v0 = q.v;
+              const k = Math.min(MAX_ZOOM, Math.max(1, v0.k * (Math.hypot(a.x - b.x, a.y - b.y) / q.d)));
+              const m0x = (q.mx - rect.left) * ratio, m0y = (q.my - rect.top) * ratio;
+              const m1x = ((a.x + b.x) / 2 - rect.left) * ratio, m1y = ((a.y + b.y) / 2 - rect.top) * ratio;
+              const cx = W / 2, cy = H / 2, g = k / v0.k;
+              setView(fit({ k, x: m1x - cx - g * (m0x - cx - v0.x), y: m1y - cy - g * (m0y - cy - v0.y) }));
+              return;
+            }
             const d = drag.current;
             if (!d) return;
             const dx = e.clientX - d.x, dy = e.clientY - d.y;
             if (Math.abs(dx) + Math.abs(dy) > 5) moved.current = true;
-            if (moved.current) {
-              const ratio = W / stageRef.current.getBoundingClientRect().width;
-              setView((v) => fit({ ...v, x: d.vx + dx * ratio, y: d.vy + dy * ratio }));
-            }
+            if (moved.current) setView((v) => fit({ ...v, x: d.vx + dx * ratio, y: d.vy + dy * ratio }));
           }}
-          onPointerUp={() => { drag.current = null; painting.current = false; }}
-          onPointerLeave={() => { drag.current = null; painting.current = false; }}
+          onPointerUp={(e) => { endPointer(e); }}
+          onPointerCancel={(e) => { endPointer(e); }}
+          onPointerLeave={(e) => { if (e.pointerType !== 'touch') endPointer(e); }}
         >
           <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Hex map of Corvane">
             <g transform={`translate(${view.x} ${view.y}) scale(${view.k})`} style={{ transformOrigin: 'center' }}>
@@ -288,14 +319,17 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
           </svg>
         </div>
         <p className="muted small-note">
-          {full ? 'Scroll to zoom, drag to move, Esc to leave full screen.' : 'Use ＋ and − to zoom (or hold Ctrl and scroll), drag to move.'} Each hex is {miles} miles across.
+          {full ? 'Scroll or pinch to zoom, drag to move, Esc to leave full screen.' : 'Pinch or use ＋ and − to zoom, drag to move (hold Ctrl and scroll on a computer).'} Each hex is {miles} miles across.
         </p>
+        <details className="hx-legend-wrap" open={legendOpen} onToggle={(e) => setLegendOpen(e.currentTarget.open)}>
+        <summary>Legend</summary>
         <ul className="hx-legend">
           {TERRAIN_KEYS.map((k) => (
             <li key={k}><i style={{ background: TERRAIN[k].fill }} />{TERRAIN[k].label}{TERRAIN[k].cost ? ` ×${TERRAIN[k].cost}` : ' (no foot travel)'}</li>
           ))}
           <li><i className="road" />Road ×{ROAD_COST}</li>
         </ul>
+        </details>
       </div>
 
       <datalist id="hx-houses">{[...new Set([...hexes.values()].map((h) => h.house).filter(Boolean))].map((n) => <option key={n} value={n} />)}</datalist>
@@ -402,7 +436,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
           </div>
         )}
 
-        <div className="card">
+        <div className="card hex-card">
           {selHex && !isDM ? (
             <div key={`${sel.c},${sel.r}`}>
               <h3>

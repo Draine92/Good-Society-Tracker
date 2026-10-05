@@ -7,12 +7,24 @@ import ThemeToggle from '@/components/ThemeToggle';
 import { SITE_NAME } from '@/lib/world';
 import CelticKnot from '@/components/CelticKnot';
 import { currentSession } from '@/lib/db';
+import MobileNav from '@/components/MobileNav';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: SITE_NAME,
   description: 'The shared notice board for our Corvane campaign: rumours, the court, the rules and the deck.',
+  applicationName: 'Corvane',
+  appleWebApp: { capable: true, title: 'Corvane', statusBarStyle: 'black-translucent' },
+  icons: { icon: '/icons/icon-192.png', apple: '/icons/apple-touch-icon.png' },
+  formatDetection: { telephone: false },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#7c1226',
 };
 
 export default async function RootLayout({ children }) {
@@ -81,6 +93,7 @@ export default async function RootLayout({ children }) {
             children
           )}
         </main>
+        {user && <MobileNav role={user.role} name={user.display_name} session={session} logoutAction={logout} />}
         {user && <AutoRefresh seconds={8} />}
       </body>
     </html>
