@@ -12,6 +12,13 @@ import { weatherMap, formatDate, MONTHS } from '@/lib/calendar';
 const S = 28;
 // Hexes are built at radius S and scaled up to sit on the picture's own printed grid.
 const K = MAP_S / S;
+// Keeps the picture filling the frame: you can zoom in and pan, but never drift off the map or zoom out past it.
+const MAX_ZOOM = 6;
+function fit(v) {
+  const k = Math.min(MAX_ZOOM, Math.max(1, v.k));
+  const mx = ((k - 1) * MAP_W) / 2, my = ((k - 1) * MAP_H) / 2;
+  return { k, x: Math.min(mx, Math.max(-mx, v.x)), y: Math.min(my, Math.max(-my, v.y)) };
+}
 const W = MAP_W;
 const H = MAP_H;
 const label = (h) => h.name || h.house || '';
@@ -71,9 +78,9 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
       const ux = (e.clientX - rect.left) * ratio, uy = (e.clientY - rect.top) * ratio;
       const f = e.deltaY < 0 ? 1.15 : 1 / 1.15;
       setView((v) => {
-        const k = Math.min(6, Math.max(0.6, v.k * f));
+        const k = Math.min(MAX_ZOOM, Math.max(1, v.k * f));
         const cx = W / 2, cy = H / 2, g = k / v.k;
-        return { k, x: ux - cx - g * (ux - cx - v.x), y: uy - cy - g * (uy - cy - v.y) };
+        return fit({ k, x: ux - cx - g * (ux - cx - v.x), y: uy - cy - g * (uy - cy - v.y) });
       });
     };
     el.addEventListener('wheel', onWheel, { passive: false });
@@ -198,7 +205,13 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
     } else setMsg('Could not save.');
   }
 
-  function zoom(k) { setView((v) => ({ ...v, k: Math.min(5, Math.max(0.6, k)) })); }
+  function zoom(k) {
+    // zoom about the middle of the frame, then settle back inside the map
+    setView((v) => {
+      const kk = Math.min(MAX_ZOOM, Math.max(1, k)), g = kk / v.k;
+      return fit({ k: kk, x: v.x * g, y: v.y * g });
+    });
+  }
 
   return (
     <div className={`hexmap${full ? ' full' : ''}`} ref={wrapRef}>
@@ -232,7 +245,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
             if (Math.abs(dx) + Math.abs(dy) > 5) moved.current = true;
             if (moved.current) {
               const ratio = W / stageRef.current.getBoundingClientRect().width;
-              setView((v) => ({ ...v, x: d.vx + dx * ratio, y: d.vy + dy * ratio }));
+              setView((v) => fit({ ...v, x: d.vx + dx * ratio, y: d.vy + dy * ratio }));
             }
           }}
           onPointerUp={() => { drag.current = null; painting.current = false; }}
