@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { DDB_URL } from '@/lib/world';
 
 const MAIN = [
   { href: '/', label: 'Board', icon: 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' },
@@ -42,6 +43,7 @@ export default function MobileNav({ role, name, session, logoutAction }) {
             {more.map((m) => (
               <Link key={m.href} href={m.href} className={isOn(m.href) ? 'on' : ''}>{m.label}</Link>
             ))}
+            <a href={DDB_URL} target="_blank" rel="noopener noreferrer">D&amp;D Beyond ↗</a>
             <form action={logoutAction}><button className="mnav-out" type="submit">Sign out</button></form>
           </div>
         </div>

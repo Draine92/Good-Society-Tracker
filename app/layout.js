@@ -4,7 +4,7 @@ import { getUser, userCount } from '@/lib/auth';
 import { logout } from './actions';
 import AutoRefresh from '@/components/AutoRefresh';
 import ThemeToggle from '@/components/ThemeToggle';
-import { SITE_NAME } from '@/lib/world';
+import { SITE_NAME, DDB_URL } from '@/lib/world';
 import CelticKnot from '@/components/CelticKnot';
 import { currentSession } from '@/lib/db';
 import MobileNav from '@/components/MobileNav';
@@ -70,6 +70,7 @@ export default async function RootLayout({ children }) {
               <Link href="/deck">Deck</Link>
               <Link href="/rumours">Rumours</Link>
               <Link href="/npcs">NPCs</Link>
+              <a href={DDB_URL} target="_blank" rel="noopener noreferrer">D&amp;D Beyond</a>
               {user.role === 'player' && <Link href="/me">My character</Link>}
               {user.role === 'dm' && <Link href="/dm">DM</Link>}
               <span className="who">

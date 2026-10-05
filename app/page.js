@@ -7,7 +7,7 @@ import HexThumb from '@/components/HexThumb';
 import { loadClock, loadHexes } from '@/lib/hexdb';
 import { shortDate, weekday, MONTHS, ERA, weatherMap } from '@/lib/calendar';
 import { loadEvents, eventsOn, upcoming } from '@/lib/events';
-import { SITE_NAME } from '@/lib/world';
+import { SITE_NAME, DDB_URL } from '@/lib/world';
 import CelticKnot from '@/components/CelticKnot';
 import { DESIRES, RELATIONSHIPS, CONNECTIONS } from '@/lib/deck-data';
 
@@ -189,6 +189,13 @@ export default async function NoticeBoard({ searchParams }) {
             </ul>
             <span className="more">See everyone →</span>
           </Link>
+
+          <a href={DDB_URL} target="_blank" rel="noopener noreferrer" className="note tilt-r2" aria-label="Join the campaign on D&D Beyond">
+            <span className="pin" />
+            <h3>The Campaign</h3>
+            <p className="muted">Characters, sheets and dice live on D&amp;D Beyond. Use the invite link to join our table.</p>
+            <span className="more">Join on D&amp;D Beyond ↗</span>
+          </a>
 
           <Link href="/court#story" className="note tilt-r2" aria-label="Open the story so far">
             <span className="pin" />
