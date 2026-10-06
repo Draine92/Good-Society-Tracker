@@ -43,6 +43,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
   const [showTerrain, setShowTerrain] = useState(false);
   const [showRoads, setShowRoads] = useState(true);
   const [showNames, setShowNames] = useState(true);
+  const [showGrid, setShowGrid] = useState(true);
   const [unit, setUnit] = useState(10); // picture units per screen pixel, so place names stay the same size on screen
   const [legendOpen, setLegendOpen] = useState(true);
   useEffect(() => { if (window.innerWidth < 761) setLegendOpen(false); }, []);
@@ -245,6 +246,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
           <button className={`tab ${mode === 'travel' ? 'on' : ''}`} onClick={() => setMode('travel')}>Travel</button>
           {isDM && <button className={`tab ${mode === 'paint' ? 'on' : ''}`} onClick={() => setMode('paint')}>Paint terrain</button>}
           <button className={`tab ${showWx ? 'on' : ''}`} onClick={() => setShowWx((v) => !v)}>Weather</button>
+          <button className={`tab ${showGrid ? 'on' : ''}`} onClick={() => setShowGrid((v) => !v)}>Grid</button>
           <button className={`tab ${showNames ? 'on' : ''}`} onClick={() => setShowNames((v) => !v)}>Names</button>
           <button className={`tab ${roadsOn ? 'on' : ''}`} onClick={() => setShowRoads((v) => !v)} disabled={mode === 'paint'}>Roads</button>
           <button className={`tab ${tint ? 'on' : ''}`} onClick={() => setShowTerrain((v) => !v)} disabled={mode === 'paint'}>Terrain colours</button>
@@ -258,7 +260,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
 
         <div
           ref={stageRef}
-          className={`hexmap-stage ${mode === 'paint' ? 'painting' : ''}`}
+          className={`hexmap-stage ${mode === 'paint' ? 'painting' : ''} ${showGrid ? '' : 'grid-off'}`}
           onPointerDown={(e) => {
             pts.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
             if (pts.current.size === 2) {
@@ -321,7 +323,7 @@ export default function HexMap({ initial, isDM, initialMiles, initialParty, init
                 {party && (() => {
                   const c = center(party.c, party.r, S);
                   return (
-                    <g pointerEvents="none" className="hx-party">
+                    <g pointerEvents="none" className="hx-party" transform={`translate(${c.x - 9} ${c.y + 10}) scale(.62) translate(${-(c.x - 9)} ${-(c.y + 10)})`}>
                       <path d={`M${c.x - 9},${c.y + 10} L${c.x - 9},${c.y - 20} L${c.x + 11},${c.y - 13} L${c.x - 9},${c.y - 6}`} />
                       <circle cx={c.x - 9} cy={c.y + 10} r="2.4" />
                     </g>

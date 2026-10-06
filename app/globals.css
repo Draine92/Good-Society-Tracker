@@ -453,7 +453,9 @@ button.danger { background: #8a1c1c; color: #fff; }
 .hexmap-stage.painting { cursor: crosshair; }
 .hexmap-stage svg { display: block; width: 100%; height: auto; }
 .hx { cursor: pointer; }
-.hx-poly { stroke: transparent; stroke-width: .8; }
+.hx-poly { stroke: rgba(40,28,16,.22); stroke-width: .55; }
+.hexmap-stage.grid-off .hx-poly { stroke: transparent; }
+.hexmap-stage.painting .hx-poly { stroke: rgba(40,28,16,.55); }
 .hx:hover .hx-poly { stroke: var(--wine); stroke-width: 1.6; }
 .hx-glyph { text-anchor: middle; font-size: 13px; fill: rgba(40,30,20,.55); pointer-events: none; }
 .hx-feat { text-anchor: middle; font-size: 13px; fill: #5a1020; pointer-events: none; }
